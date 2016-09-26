@@ -11,7 +11,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/pranavpunjabi/RAMS.git"
+		"url": "git+ssh://git@github.com/hemildesai/RAMS.git"
 	},
 	"keywords": [
 		"RAMS",
@@ -22,9 +22,9 @@
 	"author": "Hemil Desai, Pranav Punjabi, Aritra Samantha, Cody Phrampus",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/pranavpunjabi/RAMS/issues"
+		"url": "https://github.com/hemildesai/RAMS/issues"
 	},
-	"homepage": "https://github.com/pranavpunjabi/RAMS#readme",
+	"homepage": "https://github.com/hemildesai/RAMS#readme",
 	"dependencies": {
 		"bcrypt": "^0.8.7",
 		"bluebird": "^3.4.1",
