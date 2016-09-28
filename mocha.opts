@@ -1,0 +1,4 @@
+--recursive
+--require ./test/test_helper.js
+--compilers js:babel-core/register
+--reporter dot
