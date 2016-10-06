@@ -18,13 +18,7 @@ if(process.env.NODE_ENV == "development") {
 app.use(compression());
 app.use(passport.initialize());
 
-import jwt_auth from './lib/jwt_auth.js';
-jwt_auth(passport);
-
 const port = process.env.PORT || 3000;
-
-import routes from "./routes";
-routes(app);
 
 app.listen(port, () => {
   console.log("app listening on port " + port);
