@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTableIfNotExists("collections", function(table) {
     table.increments();
-    table.string("title").notNullable();
+    table.string("collection_name").notNullable();
     table.boolean("is_private").defaultTo(false).notNullable();
     table.integer("user_id")
       .unsigned()
