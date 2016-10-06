@@ -20,6 +20,9 @@ app.use(passport.initialize());
 
 const port = process.env.PORT || 3000;
 
+import routes from "./routes";
+routes(app);
+
 app.listen(port, () => {
   console.log("app listening on port " + port);
 });
