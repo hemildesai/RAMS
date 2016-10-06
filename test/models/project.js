@@ -9,15 +9,14 @@ describe("Project Model Tests", () => {
 	});
 
 it("Ensures that the name of the project is not null", done => {
-		new Project ({
-			title: "Project_A"
-		})
+		new Project (
+		)
 		.save()
 		.catch(err => {})
 		.finally(() => {
 			Project.count()
 				.then(count => {
-					expect(count).to.equal(4);
+					expect(count).to.equal(3);
 					done();
 			});
 		});

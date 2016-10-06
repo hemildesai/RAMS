@@ -9,15 +9,14 @@ describe("Collection Model Tests", () => {
 	});
 
 it("Ensures that the name of the Collection is not null", done => {
-		new Collection ({
-			title: "Collection_A"
-		})
+		new Collection (
+		)
 		.save()
 		.catch(err => {})
 		.finally(() => {
 			Collection.count()
 				.then(count => {
-					expect(count).to.equal(5);
+					expect(count).to.equal(4);
 					done();
 			});
 		});
