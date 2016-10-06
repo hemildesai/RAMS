@@ -14,7 +14,12 @@ const Project = Bookshelf.Model.extend({
 
 	validateSave: function() {
 		return checkit(rules).run(this.attributes);
-	}
+	},
+
+	
+	user: function() {
+    	return this.belongsTo("User");
+  	}
 
 });
 
