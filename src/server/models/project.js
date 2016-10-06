@@ -1,4 +1,6 @@
 import Bookshelf from '../../bookshelf';
+import Promise from 'bluebird';
+import checkit from 'checkit';
 
 var rules = {
 	project_name : ['required']
@@ -16,7 +18,6 @@ const Project = Bookshelf.Model.extend({
 		return checkit(rules).run(this.attributes);
 	},
 
-	
 	user: function() {
     	return this.belongsTo("User");
   	}
