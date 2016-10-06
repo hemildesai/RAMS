@@ -11,3 +11,12 @@ Follow the steps to setup the environment on your local machine -
 * The environment variables for development should be stored in a .env file at the root of the repo (take a look at `knexfile.js` for the required environment variables)
 * Create the necessary development and test databases in your local MySQL instance or else the database connection via `knex` will fail
 * See `package.json` for scripts to run and test the API
+
+## Required environment variables
+* MYSQL_HOST
+* MYSQL_TEST_USER
+* MYSQL_TEST_PASSWORD
+* MYSQL_TEST_DATABASE
+* MYSQL_DEVELOPMENT_USER
+* MYSQL_DEVELOPMENT_PASSWORD
+* MYSQL_DEVELOPMENT_DATABASE
