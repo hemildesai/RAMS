@@ -3,8 +3,10 @@ import Promise from 'bluebird';
 import checkit from 'checkit';
 
 var rules = {
-	project_name : ['required']
+	title : ['required']
 };
+
+require("./user");
 
 const Project = Bookshelf.Model.extend({
 	tableName:'projects',
@@ -18,9 +20,9 @@ const Project = Bookshelf.Model.extend({
 		return checkit(rules).run(this.attributes);
 	},
 
-	user: function() {
-    	return this.belongsTo("User");
-  	}
+  user: function() {
+    return this.belongsTo("User");
+  }
 
 });
 

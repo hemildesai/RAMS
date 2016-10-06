@@ -10,7 +10,7 @@ describe("Project Model Tests", () => {
 
 it("Ensures that the name of the project is not null", done => {
 		new Project ({
-			project_name: "Project_A"
+			title: "Project_A"
 		})
 		.save()
 		.catch(err => {})

@@ -1,4 +1,4 @@
-import Collections from '../../src/server/models/collections';
+import Collection from '../../src/server/models/collection';
 
 describe("Collection Model Tests", () => {
 		beforeEach( done => {
@@ -10,14 +10,14 @@ describe("Collection Model Tests", () => {
 
 it("Ensures that the name of the Collection is not null", done => {
 		new Collection ({
-			collection_name: "Collection_A"
+			title: "Collection_A"
 		})
 		.save()
 		.catch(err => {})
 		.finally(() => {
-			Project.count()
+			Collection.count()
 				.then(count => {
-					expect(count).to.equal(4);
+					expect(count).to.equal(5);
 					done();
 			});
 		});
