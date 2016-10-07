@@ -11,7 +11,7 @@ require('./user');
 require("./collection");
 
 const Team = Bookshelf.Model.extend({
-  tableName: "Team",
+  tableName: "teams",
   hasTimestamps: true,
 
   initialize: function() {
