@@ -9,6 +9,9 @@ export function postResource(req, res) {
   })
   .save()
   .then(resource => {
+    if(req.body.collection_id) {
+      resource.collections().attach(req.body.collection_id);
+    }
     res.status(200);
     res.json({success: true, resource});
   })
@@ -62,7 +65,7 @@ export function putResource(req, res) {
         name: req.body.name || resource.attributes.name,
         link: req.body.link || resource.attributes.link,
         is_private: req.body.is_private || resource.attributes.is_private
-      })
+      }, {patch: true})
       .then(resource => {
         res.json({success: true, resource});
       })

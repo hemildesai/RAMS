@@ -1,5 +1,6 @@
 var jwt_token;
 import Resource from '../../src/server/models/resource.js';
+import Collection from '../../src/server/models/collection.js';
 import {authenticate_user} from '../helpers/authentication_helper.js';
 
 describe("Resource controller tests", () => {
@@ -36,6 +37,37 @@ describe("Resource controller tests", () => {
             .then(count => {
               expect(count).to.equal(5);
               done();
+            });
+        });
+    });
+
+    it("should create a Resource and add it to collection if collection id is mentioned", (done)  => {
+      chai.request(server)
+        .post("/api/resources")
+        .set("x-access-token", jwt_token)
+        .send({
+          name: "google",
+          link: "google.com",
+          is_private: false,
+          collection_id: 1
+        })
+        .end((err, res) => {
+          expect(res.status).to.eq(200);
+          expect(res.body.success).to.eq(true);
+          expect(res.body.resource).to.not.be.undefined;
+          expect(res.body.resource.name).to.eq("google");
+          expect(res.body.resource.link).to.eq("google.com");
+          expect(res.body.resource.is_private).to.eq(false);
+          Resource.count()
+            .then(count => {
+              expect(count).to.equal(5);
+              Collection
+                .where({user_id: 1, id: 1})
+                .fetch({require: true, withRelated: ["resources"]})
+                .then((collection) => {
+                  expect(collection.toJSON().resources.length).to.eq(1);
+                  done();
+                })
             });
         });
     });

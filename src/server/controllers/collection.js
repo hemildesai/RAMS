@@ -60,7 +60,7 @@ export function putCollection(req, res) {
       .save({
         title: req.body.title || collection.attributes.title,
         is_private: req.body.is_private || collection.attributes.is_private
-      })
+      }, {patch: true})
       .then(collection => {
         res.json({success: true, collection});
       })
