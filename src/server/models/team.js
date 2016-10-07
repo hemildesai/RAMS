@@ -22,6 +22,10 @@ const Team = Bookshelf.Model.extend({
     return checkit(rules).run(this.attributes);
   }
 
+  collections: function() {
+    return this.belongsTo("Organization");
+  }
+
 });
 
 export default Bookshelf.model("Team", Team);
