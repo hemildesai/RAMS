@@ -64,7 +64,7 @@
 								    	<input class="form-control" id="inputdefault" type="text">
 								    </div>
 								    <center>
-									    <button type="button" class="btn btn-primary btn-lg">
+									    <button type="button" class="btn btn-primary btn-lg" id="login_button" onclick="login_function()">
 									    	<span class="glyphicon glyphicon-ok"></span> Login
 									    </button>
 								    </center>
@@ -99,7 +99,7 @@
 								    	<input class="form-control" id="inputdefault" type="text">
 								    </div>
 								    <center>
-									    <button type="button" class="btn btn-success btn-lg">
+									    <button type="button" class="btn btn-success btn-lg" id="sign_up_button" onclick="signUp_function()">
 									    	<span class="glyphicon glyphicon-plus"></span> Sign-Up
 									    </button>
 								    </center>
@@ -110,6 +110,16 @@
 				</div>
 			</div>
 		</div>
+
+		<script>
+			function login_function() {
+			    window.open("./dashboard.html", "_self");
+			}
+
+			function signUp_function() {
+				window.open("./dashboard.html", "_self");
+			}
+		</script>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="./bootstrap/js/bootstrap.min.js"></script>
