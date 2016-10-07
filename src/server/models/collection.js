@@ -7,6 +7,7 @@ var rules = {
 };
 
 require("./user");
+require("./resource");
 
 const Collection = Bookshelf.Model.extend({
   tableName:'collections',
@@ -18,6 +19,10 @@ const Collection = Bookshelf.Model.extend({
 
   validateSave: function() {
     return checkit(rules).run(this.attributes);
+  },
+
+  resources:  function() {
+    return this.belongsToMany("Resource");
   },
 
   user: function() {
