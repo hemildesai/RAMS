@@ -6,16 +6,17 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "icon.png",
     "default_title": "Click here!"
+    // "default_popup": "./front/background.html"
   },
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "scripts": ["./front/background.js"]
+    // "persistent": false
   },
   "permissions": [
     "activeTab",
     "https://ajax.googleapis.com/",
-    "tabs"
+    "tabs",
+    "background"
   ]
 }
