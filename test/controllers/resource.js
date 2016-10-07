@@ -49,7 +49,7 @@ describe("Resource controller tests", () => {
           name: "google",
           link: "google.com",
           is_private: false,
-          collection_id: 1
+          collection_id: 3
         })
         .end((err, res) => {
           expect(res.status).to.eq(200);
@@ -62,12 +62,12 @@ describe("Resource controller tests", () => {
             .then(count => {
               expect(count).to.equal(5);
               Collection
-                .where({user_id: 1, id: 1})
+                .where({id: 3})
                 .fetch({require: true, withRelated: ["resources"]})
                 .then((collection) => {
                   expect(collection.toJSON().resources.length).to.eq(1);
                   done();
-                })
+                });
             });
         });
     });

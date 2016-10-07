@@ -187,4 +187,69 @@ describe("Collection controller tests", () => {
         });
     });
   });
+
+  describe("removeResourceFromCollection", () => {
+    it("should remove the specified resource from the collection", done => {
+      chai.request(server)
+        .post("/api/resources")
+        .set("x-access-token", jwt_token)
+        .send({
+          name: "google",
+          link: "google.com",
+          is_private: false,
+          collection_id: 1
+        })
+        .end((err, res) => {
+          chai.request(server)
+            .post("/api/collections/1/remove")
+            .set("x-access-token", jwt_token)
+            .send({
+              resource_id: res.body.resource.id
+            })
+            .end((err, res) => {
+              expect(res.status).to.eq(200);
+              expect(res.body.success).to.eq(true);
+              Collection
+                .where({user_id: 1, id: 1})
+                .fetch({require: true, withRelated: ["resources"]})
+                .then((collection) => {
+                  expect(collection.toJSON().resources.length).to.eq(0);
+                  done();
+                });
+            });
+        });
+    });
+  });
+
+  describe("addResourceToCollection", () => {
+    it("should remove the specified resource from the collection", done => {
+      chai.request(server)
+        .post("/api/resources")
+        .set("x-access-token", jwt_token)
+        .send({
+          name: "google",
+          link: "google.com",
+          is_private: false
+        })
+        .end((err, res) => {
+          chai.request(server)
+            .post("/api/collections/1/add")
+            .set("x-access-token", jwt_token)
+            .send({
+              resource_id: res.body.resource.id
+            })
+            .end((err, res) => {
+              expect(res.status).to.eq(200);
+              expect(res.body.success).to.eq(true);
+              Collection
+                .where({user_id: 1, id: 1})
+                .fetch({require: true, withRelated: ["resources"]})
+                .then((collection) => {
+                  expect(collection.toJSON().resources.length).to.eq(1);
+                  done();
+                });
+            });
+        });
+    });
+  });
 });

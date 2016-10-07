@@ -110,3 +110,45 @@ export function getPrivateCollections(req, res) {
       res.send({success: false, errors: err});
     });
 }
+
+export function removeResourceFromCollection(req, res) {
+  Collection
+    .where({id: req.params.id, user_id: req.user.id})
+    .fetch({require: true, withRelated: ["resources"]})
+    .then(function (collection) {
+      collection.resources().detach(req.body.resource_id)
+        .then(function () {
+          res.json({success: true, message: 'removed resource from collection'})
+        })
+        .catch(function (err) {
+          res.json({success: false, error: "Could not remove resource from collection"});
+        });
+    })
+    .catch(Collection.NotFoundError, function () {
+      res.json({success: false, message: 'collection does not belong to you'})
+    })
+    .catch(function (err) {
+      res.json({success: false, error: "Could not remove resource from collection"});
+    });
+}
+
+export function addResourceToCollection(req, res) {
+  Collection
+    .where({id: req.params.id, user_id: req.user.id})
+    .fetch({require: true, withRelated: ["resources"]})
+    .then(function (collection) {
+      collection.resources().attach(req.body.resource_id)
+        .then(function () {
+          res.json({success: true, message: 'added resource to collection'})
+        })
+        .catch(function (err) {
+          res.json({success: false, error: "Could not remove resource from collection"});
+        });
+    })
+    .catch(Collection.NotFoundError, function () {
+      res.json({success: false, message: 'collection does not belong to you'})
+    })
+    .catch(function (err) {
+      res.json({success: false, error: "Could not remove resource from collection"});
+    });
+}
