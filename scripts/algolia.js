@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var async = require('async');
-import Resource from '../models/resource.js';
+import Resource from '../src/server/models/resource.js';
 
 var algoliasearch = require('algoliasearch');
 var client = algoliasearch("1W6YX64AEN", "625f888db6fb5a3f5410515f96c8efa5");

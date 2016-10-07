@@ -22,7 +22,7 @@ search.addWidget(
 var hitTemplate =
   '<div class="hit media" style="margin-top: 10px;">' +
     '<div class="media-left">' +
-      '<div class="media-object text-center" style="margin-top: 6px;"><a href="https://{{{link}}}" class="logo"><i class="fa fa-link"></i></a></div>' +
+      '<div class="media-object text-center" style="margin-top: 6px;"><a href="{{{link}}}" class="logo"><i class="fa fa-link"></i></a></div>' +
     '</div>' +
     '<div class="media-body" style="margin-top: 10px;">' +
       '<h4 class="media-heading" style="margin-top: 6px;">{{{_highlightResult.name.value}}}</h4>' +

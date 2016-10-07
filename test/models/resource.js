@@ -18,7 +18,7 @@ describe("Resource model tests", () => {
     .finally(() => {
       Resource.count()
         .then(count => {
-          expect(count).to.equal(4);
+          expect(count).to.equal(598);
           done();
         });
     });
