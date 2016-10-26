@@ -7,10 +7,10 @@ var rules = {
 };
 
 require('./user');
-require("./organization");
+require("./team");
 
-const Team = Bookshelf.Model.extend({
-  tableName: "teams",
+const Organization = Bookshelf.Model.extend({
+  tableName: "organizations",
   hasTimestamps: true,
 
   initialize: function() {
@@ -21,15 +21,14 @@ const Team = Bookshelf.Model.extend({
     return checkit(rules).run(this.attributes);
   },
 
-  organization: function() {
-    return this.belongsTo("Organization");
+  teams: function() {
+    return this.hasMany("Team");
   },
 
-  users: function() {
-    return this.hasMany("User");
-  }
-
+  // users: function() {
+  //   return this.hasMany("User");
+  // }
 });
 
-export default Bookshelf.model("Team", Team);
+export default Bookshelf.model("Organization", Organization);
 
