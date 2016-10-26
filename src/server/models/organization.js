@@ -7,7 +7,7 @@ var rules = {
 };
 
 require('./user');
-require("./collection");
+require("./team");
 
 const Organization = Bookshelf.Model.extend({
   tableName: "organizations",
@@ -21,13 +21,13 @@ const Organization = Bookshelf.Model.extend({
     return checkit(rules).run(this.attributes);
   },
 
-  collections: function() {
+  teams: function() {
     return this.hasMany("Team");
-  }
+  },
 
-  collections: function() {
-    return this.hasMany("User");
-  }
+  // users: function() {
+  //   return this.hasMany("User");
+  // }
 });
 
 export default Bookshelf.model("Organization", Organization);

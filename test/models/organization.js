@@ -15,7 +15,7 @@ describe("Organization model tests", () => {
     .save()
     .catch(err => {})
     .finally(() => {
-      Resource.count()
+      Organization.count()
         .then(count => {
           expect(count).to.equal(4);
           done();
