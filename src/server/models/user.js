@@ -9,9 +9,9 @@ var rules = {
   password: ['required', 'minLength:5']
 };
 
-// require('./resource');
-// require('./collection');
-// require('./team');
+require('./resource');
+require('./collection');
+require('./team');
 // require('./organization');
 
 const User = Bookshelf.Model.extend({
@@ -32,19 +32,19 @@ const User = Bookshelf.Model.extend({
       .then(hash  => {
         this.set('password', hash);
       });
-  }//,
-  //
-  // resources: function() {
-  //   return this.hasMany("Resource");
-  // },
-  //
-  // collections: function() {
-  //   return this.hasMany("Collection");
-  // },
-  //
-  // team: function() {
-  //   return this.belongsTo("Team");
-  // }
+  },
+
+  resources: function() {
+    return this.hasMany("Resource");
+  },
+
+  collections: function() {
+    return this.hasMany("Collection");
+  },
+
+  team: function() {
+    return this.belongsTo("Team");
+  }
 
 }, {
   verifyUser: Promise.method(function (username, password) {
