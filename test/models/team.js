@@ -8,14 +8,14 @@ describe("Team model tests", () => {
       });
   });
 
-  it("ensures that the maximum length of a resource name is 20", done => {
+  it("ensures that the maximum length of a team name is 20", done => {
     new Team({
-      title: "Title of team"
+      name: "Title of team"
     })
     .save()
     .catch(err => {})
     .finally(() => {
-      Resource.count()
+      Team.count()
         .then(count => {
           expect(count).to.equal(4);
           done();

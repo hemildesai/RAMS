@@ -3,12 +3,11 @@ import Promise from 'bluebird';
 import checkit from 'checkit';
 
 var rules = {
-  title: ['required']
-  
+  name: ['required']
 };
 
 require('./user');
-require("./collection");
+// require("./collection");
 
 const Team = Bookshelf.Model.extend({
   tableName: "teams",
@@ -20,10 +19,14 @@ const Team = Bookshelf.Model.extend({
 
   validateSave: function() {
     return checkit(rules).run(this.attributes);
-  }
+  },
 
-  collections: function() {
+  organization: function() {
     return this.belongsTo("Organization");
+  },
+
+  users: function() {
+    return this.hasMany("User");
   }
 
 });
