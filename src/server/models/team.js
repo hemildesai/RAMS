@@ -7,7 +7,7 @@ var rules = {
 };
 
 require('./user');
-// require("./collection");
+require("./organization");
 
 const Team = Bookshelf.Model.extend({
   tableName: "teams",

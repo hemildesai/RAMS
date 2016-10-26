@@ -9,7 +9,7 @@ describe("Organization model tests", () => {
   });
 
   it("ensures that a name is provided", done => {
-    new Resource({
+    new Organization({
       name: "Organization Name"
     })
     .save()
