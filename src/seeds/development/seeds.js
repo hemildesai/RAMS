@@ -14,9 +14,9 @@ exports.seed = function(knex, Promise) {
             .then(() => {
               return project_seeds.seed(knex, Promise)
                 .then(() => {
-                  return resource_seeds.seed(knex, Promise)
+                  return collection_seeds.seed(knex, Promise)
                     .then(() => {
-                      return collection_seeds.seed(knex, Promise);
+                      return resource_seeds.seed(knex, Promise);
                     });
                 });
             });

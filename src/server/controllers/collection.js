@@ -35,7 +35,7 @@ export function getCollection(req, res) {
         this.where({is_private: false}).orWhere({user_id: req.user.id});
       })
     })
-    .fetch({require: true, withRelated: ["user"]})
+    .fetch({require: true, withRelated: ["resources"]})
     .then(function(collection) {
       res.json({success: true, collection});
     })

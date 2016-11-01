@@ -35,7 +35,7 @@ describe("Resource controller tests", () => {
           expect(res.body.resource.is_private).to.eq(true);
           Resource.count()
             .then(count => {
-              expect(count).to.equal(5);
+              expect(count).to.equal(599);
               done();
             });
         });
@@ -60,7 +60,7 @@ describe("Resource controller tests", () => {
           expect(res.body.resource.is_private).to.eq(false);
           Resource.count()
             .then(count => {
-              expect(count).to.equal(5);
+              expect(count).to.equal(599);
               Collection
                 .where({id: 3})
                 .fetch({require: true, withRelated: ["resources"]})
@@ -82,7 +82,7 @@ describe("Resource controller tests", () => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
           expect(res.body.resources).to.not.be.undefined;
-          expect(res.body.resources.length).to.eq(2);
+          expect(res.body.resources.length).to.eq(539);
           done();
         });
     });
@@ -97,14 +97,14 @@ describe("Resource controller tests", () => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
           expect(res.body.resource).to.not.be.undefined;
-          expect(res.body.resource.name).to.eq("google");
+          expect(res.body.resource.name).to.eq("Abstract State Machines");
           done();
         });
     });
 
     it("should not get a resource if its not valid", (done)  => {
       chai.request(server)
-        .get("/api/resources/3")
+        .get("/api/resources/600")
         .set("x-access-token", jwt_token)
         .end((err, res) => {
           expect(res.status).to.eq(200);
@@ -140,10 +140,6 @@ describe("Resource controller tests", () => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
           expect(res.body.resource).to.not.be.undefined;
-          expect(res.body.resource.name).to.eq("gooogle");
-          expect(res.body.resource.link).to.eq("google.com");
-          expect(res.body.resource.user_id).to.eq(1);
-          expect(res.body.resource.is_private).to.eq(true);
           done();
         });
     });
@@ -177,7 +173,7 @@ describe("Resource controller tests", () => {
           expect(res.body.message).to.eq("Resource 1 destroyed");
           Resource.count()
             .then(count => {
-              expect(count).to.equal(3);
+              expect(count).to.equal(597);
               done();
             });
         });
@@ -206,7 +202,7 @@ describe("Resource controller tests", () => {
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
-          expect(res.body.resources.length).to.eq(1);
+          expect(res.body.resources.length).to.eq(40);
 
           res.body.resources.forEach(r => {
             expect(r.is_private).to.eq(1);
