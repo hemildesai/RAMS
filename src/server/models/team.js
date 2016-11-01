@@ -3,15 +3,14 @@ import Promise from 'bluebird';
 import checkit from 'checkit';
 
 var rules = {
-  name: ['required', 'maxLength:20'],
-  link: ["required"]
+  name: ['required']
 };
 
 require('./user');
-require("./collection");
+require("./organization");
 
-const Resource = Bookshelf.Model.extend({
-  tableName: "resources",
+const Team = Bookshelf.Model.extend({
+  tableName: "teams",
   hasTimestamps: true,
 
   initialize: function() {
@@ -22,13 +21,15 @@ const Resource = Bookshelf.Model.extend({
     return checkit(rules).run(this.attributes);
   },
 
-  collections: function() {
-    return this.belongsToMany("Collection");
+  organization: function() {
+    return this.belongsTo("Organization");
   },
 
-  user: function() {
-    return this.belongsTo("User");
+  users: function() {
+    return this.hasMany("User");
   }
+
 });
 
-export default Bookshelf.model("Resource", Resource);
+export default Bookshelf.model("Team", Team);
+
