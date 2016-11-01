@@ -18,7 +18,7 @@ describe("Project controller tests", () => {
   describe("postProject", () => {
     it("should create a Project", (done)  => {
       chai.request(server)
-        .post("/api/project")
+        .post("/api/projects")
         .set("x-access-token", jwt_token)
         .send({
           title: "timepass",
@@ -47,10 +47,10 @@ describe("Project controller tests", () => {
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
-          expect(res.body.projects.length).to.eq(2);
+          expect(res.body.projects.length).to.eq(1);
 
           res.body.projects.forEach(c => {
-            expect(c.title).to.include("test");
+            // expect(c.title).to.include("test");
             expect(c.user_id).to.eq(1);
           });
 
@@ -68,7 +68,7 @@ describe("Project controller tests", () => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
           expect(res.body.project).to.not.be.undefined;
-          expect(res.body.project.title).to.eq("test tech");
+          expect(res.body.project.title).to.eq("project1");
           done();
         });
     });
@@ -176,7 +176,7 @@ describe("Project controller tests", () => {
         .end((err, res) => {
           expect(res.status).to.eq(200);
           expect(res.body.success).to.eq(true);
-          expect(res.body.projects.length).to.eq(1);
+          expect(res.body.projects.length).to.eq(2);
 
           res.body.projects.forEach(r => {
             expect(r.is_private).to.eq(1);
@@ -188,14 +188,13 @@ describe("Project controller tests", () => {
     });
   });
 
-  describe("removeResourceFromProject", () => {
-    it("should remove the specified resource from the project", done => {
+  describe("removeCollectionFromProject", () => {
+    it("should remove the specified collection from the project", done => {
       chai.request(server)
-        .post("/api/resources")
+        .post("/api/collections")
         .set("x-access-token", jwt_token)
         .send({
-          name: "google",
-          link: "google.com",
+          title: "google",
           is_private: false,
           project_id: 1
         })
@@ -204,16 +203,16 @@ describe("Project controller tests", () => {
             .post("/api/projects/1/remove")
             .set("x-access-token", jwt_token)
             .send({
-              resource_id: res.body.resource.id
+              collection_id: res.body.collection.id
             })
             .end((err, res) => {
               expect(res.status).to.eq(200);
               expect(res.body.success).to.eq(true);
               Project
                 .where({user_id: 1, id: 1})
-                .fetch({require: true, withRelated: ["resources"]})
+                .fetch({require: true, withRelated: ["collections"]})
                 .then((project) => {
-                  expect(project.toJSON().resources.length).to.eq(0);
+                  expect(project.toJSON().collections.length).to.eq(0);
                   done();
                 });
             });
@@ -221,14 +220,13 @@ describe("Project controller tests", () => {
     });
   });
 
-  describe("addResourceToProject", () => {
-    it("should remove the specified resource from the project", done => {
+  describe("addCollectionToProject", () => {
+    it("should remove the specified collection from the project", done => {
       chai.request(server)
-        .post("/api/resources")
+        .post("/api/collections")
         .set("x-access-token", jwt_token)
         .send({
-          name: "google",
-          link: "google.com",
+          title: "googledsds",
           is_private: false
         })
         .end((err, res) => {
@@ -236,16 +234,16 @@ describe("Project controller tests", () => {
             .post("/api/projects/1/add")
             .set("x-access-token", jwt_token)
             .send({
-              resource_id: res.body.resource.id
+              collection_id: res.body.collection.id
             })
             .end((err, res) => {
               expect(res.status).to.eq(200);
               expect(res.body.success).to.eq(true);
               Project
                 .where({user_id: 1, id: 1})
-                .fetch({require: true, withRelated: ["resources"]})
+                .fetch({require: true, withRelated: ["collections"]})
                 .then((project) => {
-                  expect(project.toJSON().resources.length).to.eq(1);
+                  expect(project.toJSON().collections.length).to.eq(1);
                   done();
                 });
             });

@@ -111,44 +111,44 @@ export function getPrivateProjects(req, res) {
     });
 }
 
-export function removeResourceFromProject(req, res) {
+export function removeCollectionFromProject(req, res) {
   Project
     .where({id: req.params.id, user_id: req.user.id})
-    .fetch({require: true, withRelated: ["resources"]})
+    .fetch({require: true, withRelated: ["collections"]})
     .then(function (project) {
-      project.resources().detach(req.body.resource_id)
+      project.collections().detach(req.body.collection_id)
         .then(function () {
-          res.json({success: true, message: 'removed resource from project'})
+          res.json({success: true, message: 'removed collection from project'})
         })
         .catch(function (err) {
-          res.json({success: false, error: "Could not remove resource from project"});
+          res.json({success: false, error: "Could not remove collection from project"});
         });
     })
     .catch(Project.NotFoundError, function () {
       res.json({success: false, message: 'project does not belong to you'})
     })
     .catch(function (err) {
-      res.json({success: false, error: "Could not remove resource from project"});
+      res.json({success: false, error: "Could not remove collection from project"});
     });
 }
 
-export function addResourceToProject(req, res) {
+export function addCollectionToProject(req, res) {
   Project
     .where({id: req.params.id, user_id: req.user.id})
-    .fetch({require: true, withRelated: ["resources"]})
+    .fetch({require: true, withRelated: ["collections"]})
     .then(function (project) {
-      project.resources().attach(req.body.resource_id)
+      project.collections().attach(req.body.collection_id)
         .then(function () {
-          res.json({success: true, message: 'added resource to project'})
+          res.json({success: true, message: 'added collection to project'})
         })
         .catch(function (err) {
-          res.json({success: false, error: "Could not remove resource from project"});
+          res.json({success: false, error: "Could not remove collection from project"});
         });
     })
     .catch(Project.NotFoundError, function () {
       res.json({success: false, message: 'project does not belong to you'})
     })
     .catch(function (err) {
-      res.json({success: false, error: "Could not remove resource from project"});
+      res.json({success: false, error: "Could not remove collection from project"});
     });
 }
