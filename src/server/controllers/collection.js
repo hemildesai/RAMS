@@ -8,6 +8,9 @@ export function postCollection(req, res) {
   })
   .save()
   .then(collection => {
+    if(req.body.project_id) {
+      collection.projects().attach(req.body.project_id);
+    }
     res.status(200);
     res.json({success: true, collection});
   })

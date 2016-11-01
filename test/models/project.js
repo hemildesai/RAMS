@@ -16,7 +16,7 @@ it("Ensures that the name of the project is not null", done => {
 		.finally(() => {
 			Project.count()
 				.then(count => {
-					expect(count).to.equal(3);
+					expect(count).to.equal(4);
 					done();
 			});
 		});
