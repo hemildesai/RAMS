@@ -58,7 +58,7 @@
 		            				<center><code color="blue">Login</code></center>
 		            			</h1>
 
-		            			<form method="GET">
+		            			<form method="post">
 		        					<div class="form-group">
 								    	<label for="inputdefault"><h2>Username *</h2></label>
 								    	<input class="form-control" id="user_name" type="text">
@@ -136,40 +136,7 @@
 			</div>
 		</div>
 
-		<script type="text/javascript">
-			function login_function() 
-			{
-				var users_user_name = document.getElementById("user_name").value;
-				var users_user_pass = document.getElementById("user_pass").value;
-				
-				if(users_user_name == "" && users_user_pass == "")
-				{
-					document.getElementById("modal_p").innerHTML = "Username and password cannot be empty.";
-					$("#message_modal").modal();
-					return;
-				}
-				else if(users_user_name == "" && users_user_pass != "")
-				{
-					document.getElementById("modal_p").innerHTML = "Username cannot be empty.";
-					$("#message_modal").modal();
-					return;
-				}
-				else if(users_user_name != "" && users_user_pass == "")
-				{
-					document.getElementById("modal_p").innerHTML = "Password cannot be empty.";
-					$("#message_modal").modal();
-					return;
-				}
-				
-				/***Pass function***/
-				var passed = false;
-				if(passed == true)
-			    	window.open("./dashboard.html", "_self");
-			}
-
-			function signUp_function() {
-				window.open("./dashboard.html", "_self");
-			}
+		<script type="text/javascript" src="login_sign_up.js">
 		</script>
 
 	<script src="./bootstrap/js/bootstrap.min.js"></script>
