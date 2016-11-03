@@ -2,7 +2,7 @@ import Team from '../models/team.js';
 
 export function postTeam(req, res) {
   new Team({
-    organization_id: req.organization.id,
+    organization_id: req.user.attributes.organization_id || req.body.organization_id,
     name: req.body.name,
   })
   .save()
@@ -17,6 +17,9 @@ export function postTeam(req, res) {
 
 export function getTeams(req, res) {
   Team
+    .query(qb  => {
+      qb.where({organization_id: req.user.attributes.organization_id});
+    })
     .fetchAll()
     .then(function(teams) {
       res.json({success: true, teams});
@@ -30,10 +33,10 @@ export function getTeam(req, res) {
   Team
     .query(qb  => {
       qb.where({id: req.params.id}).andWhere(function() {
-        this.where({organization_id: req.organization.id});
+        this.where({id: req.user.attributes.team_id});
       })
     })
-    .fetch({require: true, withRelated: ["organization"]})
+    .fetch({require: true, withRelated: ["users"]})
     .then(function(team) {
       res.json({success: true, team});
     })
@@ -49,8 +52,8 @@ export function putTeam(req, res) {
   Team
     .query(qb  => {
       qb
-      .where({id: req.params.id})
-      .andWhere({organization_id: req.organization.id})
+      .where({id: req.params.id});
+      // .andWhere({organization_id: req.organization.id})
     })
     .fetch({require: true})
     .then(function(team) {
@@ -77,8 +80,8 @@ export function deleteTeam(req, res) {
   Team
     .query(qb  => {
       qb
-      .where({id: req.params.id})
-      .andWhere({organization_id: req.organization.id})
+      .where({id: req.params.id});
+      // .andWhere({organization_id: req.organization.id})
     })
     .destroy({require: true})
     .then(function(team) {

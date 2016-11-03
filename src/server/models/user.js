@@ -12,7 +12,7 @@ var rules = {
 require('./resource');
 require('./collection');
 require('./team');
-// require('./organization');
+require('./organization');
 
 const User = Bookshelf.Model.extend({
   tableName: "users",
@@ -44,6 +44,10 @@ const User = Bookshelf.Model.extend({
 
   team: function() {
     return this.belongsTo("Team");
+  },
+
+  organization: function() {
+    return this.belongsTo("Organization");
   }
 
 }, {
