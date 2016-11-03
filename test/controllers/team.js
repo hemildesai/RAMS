@@ -1,5 +1,6 @@
 var jwt_token;
 import Team from '../../src/server/models/team.js';
+import User from '../../src/server/models/user.js';
 import {authenticate_user} from '../helpers/authentication_helper.js';
 
 describe("Team controller tests", () => {
@@ -18,21 +19,39 @@ describe("Team controller tests", () => {
   describe("postTeam", () => {
     it("should create a Team", (done)  => {
       chai.request(server)
-        .post("/api/teams")
-        .set("x-access-token", jwt_token)
+        .post("/api/users")
         .send({
-          name: "timepass",
-          organization_id: 1
+          username: "test",
+          password: "12345"
         })
         .end((err, res) => {
-          expect(res.status).to.eq(200);
-          expect(res.body.success).to.eq(true);
-          expect(res.body.team).to.not.be.undefined;
-          expect(res.body.team.name).to.eq("timepass");
-          Team.count()
-            .then(count => {
-              expect(count).to.equal(4);
-              done();
+          chai.request(server)
+            .post("/api/authenticate")
+            .send({
+              username: "test",
+              password: "12345"
+            })
+            .end((err, res) => {
+              if(err) throw(err);
+              jwt_token = res.body.token;
+              chai.request(server)
+                .post("/api/teams")
+                .set("x-access-token", jwt_token)
+                .send({
+                  name: "timepass",
+                  organization_id: 1
+                })
+                .end((err, res) => {
+                  expect(res.status).to.eq(200);
+                  expect(res.body.success).to.eq(true);
+                  expect(res.body.team).to.not.be.undefined;
+                  expect(res.body.team.name).to.eq("timepass");
+                  Team.count()
+                    .then(count => {
+                      expect(count).to.equal(4);
+                      done();
+                    });
+                });
             });
         });
     });

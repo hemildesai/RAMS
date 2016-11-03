@@ -14,9 +14,17 @@ function team_admin(req, res, next) {
   }
 }
 
+function team_creation(req, res, next) {
+  if(!req.user.attributes.team_id) {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+}
+
 router.route('/')
   .get(getTeams)
-  .post(postTeam);
+  .post(team_creation, postTeam);
 
 router.route('/:id')
   .get(getTeam)

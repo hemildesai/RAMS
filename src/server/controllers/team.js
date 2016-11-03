@@ -7,8 +7,18 @@ export function postTeam(req, res) {
   })
   .save()
   .then(team => {
-    res.status(200);
-    res.json({success: true, team});
+    req.user.save({
+      team_id: team.id,
+      permissions: 1
+    })
+    .then(user => {
+      res.status(200);
+      res.json({success: true, team, user});
+    });
+    // .finally(() => {
+    //   res.status(200);
+    //   res.json({success: true, team});
+    // });
   })
   .catch(err => {
     res.json({success: false, errors: err});
