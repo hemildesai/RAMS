@@ -1,3 +1,5 @@
+document.getElementById("login_button").addEventListener("click", login_function);
+
 function login_function() 
 {
 	var users_user_name = document.getElementById("user_name").value;
@@ -28,12 +30,12 @@ function login_function()
 	
 	$.ajax({
 		type: "POST",
-		url: "/user",
+		url: "../src/server/models/user.js",
 		data: {username: users_user_name, password: users_user_pass},
 		success: function(data){
 			passed = true;
 		},
-		dataType: "text"
+		dataType: "jsonp"
 	});
 	
 	if(passed == true)
