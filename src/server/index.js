@@ -26,10 +26,6 @@ const port = process.env.PORT || 3000;
 import routes from "./routes";
 routes(app);
 
-app.get('/',function(req,res){
-  res.sendfile("login_sign_up.html");
-});
-
 app.listen(port, () => {
   console.log("app listening on port " + port);
 });

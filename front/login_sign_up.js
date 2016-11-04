@@ -1,4 +1,5 @@
 document.getElementById("login_button").addEventListener("click", login_function);
+document.getElementById("sign_up_button").addEventListener("click", signUp_function);
 
 function login_function() 
 {
@@ -23,26 +24,90 @@ function login_function()
 		$("#message_modal").modal();
 		return;
 	}
-	
-	// var user = new User();
-	
-	var passed = false;
-	
-	$.ajax({
-		type: "POST",
-		url: "../src/server/models/user.js",
-		data: {username: users_user_name, password: users_user_pass},
-		success: function(data){
-			passed = true;
-		},
-		dataType: "jsonp"
-	});
-	
-	if(passed == true)
-    	window.open("./dashboard.html", "_self");
+
+	var xhr = new XMLHttpRequest();
+	var url = "http://localhost:3000/api/authenticate";
+	var params = JSON.stringify({username:users_user_name, password:users_user_pass});
+	xhr.open("POST", url, true);
+
+	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+
+	xhr.onreadystatechange = function() 
+	{
+		if(xhr.readyState == 4 && xhr.status == 200) 
+		{
+			// alert(xhr.responseText);
+			var json_data = JSON.parse(xhr.responseText);
+			if(json_data["success"] == true)
+			{
+				localStorage["Rams_usr_name"] = users_user_name;
+				localStorage["Rams_usr_tok"] = json_data["token"];
+				window.open("./dashboard.html", "_self");
+			}
+			else
+			{
+				var error_data = "Wrong Username or Password!";
+				document.getElementById("modal_p").innerHTML = error_data;
+				$("#message_modal").modal();	
+			}
+		}
+	}
+	xhr.send(params);
 }
 
-function signUp_function() {
+function signUp_function() 
+{
+	var users_user_name = document.getElementById("sign_user_name").value;
+	var users_user_pass = document.getElementById("sign_user_pass").value;
 	
-	window.open("./dashboard.html", "_self");
+	if(users_user_name == "" && users_user_pass == "")
+	{
+		document.getElementById("modal_p").innerHTML = "Username and password cannot be empty.";
+		$("#message_modal").modal();
+		return;
+	}
+	else if(users_user_name == "" && users_user_pass != "")
+	{
+		document.getElementById("modal_p").innerHTML = "Username cannot be empty.";
+		$("#message_modal").modal();
+		return;
+	}
+	else if(users_user_name != "" && users_user_pass == "")
+	{
+		document.getElementById("modal_p").innerHTML = "Password cannot be empty.";
+		$("#message_modal").modal();
+		return;
+	}
+
+	var xhr = new XMLHttpRequest();
+	var url = "http://localhost:3000/api/users";
+	var params = JSON.stringify({username:users_user_name, password:users_user_pass});
+	xhr.open("POST", url, true);
+
+	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+
+	xhr.onreadystatechange = function() 
+	{
+		if(xhr.readyState == 4 && xhr.status == 200) 
+		{
+			alert(xhr.responseText);
+			var json_data = JSON.parse(xhr.responseText);
+			if(json_data["success"] == true)
+			{
+				window.open("./dashboard.html", "_self");
+			}
+			else
+			{
+				var error_data = json_data["errors"];
+				var error_msg = "Error! Please try again later.";
+				if(error_data.hasOwnProperty("password"))
+					error_msg = error_data["password"];
+				else if(error_data.hasOwnProperty("code"))
+					error_msg = "Username already exists!";
+				document.getElementById("modal_p").innerHTML = error_msg;
+				$("#message_modal").modal();	
+			}
+		}
+	}
+	xhr.send(params);
 }

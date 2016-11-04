@@ -57,16 +57,16 @@
 						<!-- Form for saving links -->
 						<form method="GET">
 	    					<div class="form-group">
-						    	<label for="inputdefault"><h2>Resource</h2></label>
-						    	<input class="form-control" id="rsrc_input" type="text">
+						    	<label for="inputdefault"><h2>Resource Link *</h2></label>
+						    	<input class="form-control" id="rsrc_link" type="text">
 						    </div>
 						    <div class="form-group">
-						    	<label for="inputdefault"><h2>Name</h2></label>
-						    	<input class="form-control" id="inputdefault" type="text">
+						    	<label for="inputdefault"><h2>Name *</h2></label>
+						    	<input class="form-control" id="rsrc_name" type="text">
 						    </div>
 						    <div class="form-group">
-						    	<label for="inputdefault"><h2>Comment</h2></label>
-						    	<textarea class="form-control input-lg" id="inputdefault" type="text"></textarea>
+						    	<label for="inputdefault"><h2>Description</h2></label>
+						    	<textarea class="form-control input-lg" id="rsrc_desc" type="text"></textarea>
 						    </div>
 						    <center>
 						    	<div class="container-fluid">
@@ -75,7 +75,31 @@
 								    </button>
 							    </div>
 						    </center>
+						    <div class="checkbox">
+							 	<label><input type="checkbox" id="rsrc_priv" value="">Private *</label>
+							</div>
 	    				</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal fade" id="message_modal" role="dialog">
+	    	<div class="modal-dialog">
+			
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title"><code>Error Message!</code></h4>
+					</div>
+					<div class="modal-body">
+						<p id="modal_p"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							<span class="glyphicon glyphicon-remove"></span>Close</button>
 					</div>
 				</div>
 			</div>

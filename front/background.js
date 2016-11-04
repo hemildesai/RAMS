@@ -14,24 +14,22 @@ chrome.browserAction.onClicked.addListener(function(tab){
 	}
 	else
 	{
-		// Check if user is already logged in
-		if(checkIfLoggedIn() == false)
+		if(localStorage.hasOwnProperty("Rams_usr_name"))
 		{
-			window.open("./front/login_sign_up.html");
+			// Open RAMS window to store the URL
+			var rams_user_tab = window.open("./front/usr_rsrc_tab.html");
+			if(rams_user_tab != null)
+				rams_user_tab.onload = function() {
+					rams_user_tab.document.getElementById("rsrc_link").value = curr_tab_url;
+				};
+			else
+				alert("Sorry\n");
+		}
+		// Check if user is already logged in
+		else
+		{
+			window.open("./front/home_rams.html");
 			return;
 		}
-
-		// Open RAMS window to store the URL
-		var rams_user_tab = window.open("./front/usr_rsrc_tab.html");
-		if(rams_user_tab != null)
-			rams_user_tab.onload = function() {
-				rams_user_tab.document.getElementById("rsrc_input").value = curr_tab_url;
-			};
-		else
-			alert("Sorry\n");
 	}
 });
-
-function checkIfLoggedIn() {
-	return true;
-};
