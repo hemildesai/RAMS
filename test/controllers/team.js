@@ -168,4 +168,61 @@ describe("Team controller tests", () => {
     });
   });
 
+  describe("addUserToTeam", () => {
+    it("should add a user to the team", (done) => {
+      chai.request(server)
+        .post("/api/users")
+        .send({
+          username: "test",
+          password: "12345"
+        })
+        .end((err, res) => {
+          chai.request(server)
+            .post("/api/teams/1/add")
+            .send({
+              user_id: res.body.user.id
+            })
+            .set("x-access-token", jwt_token)
+            .end((err, res) => {
+              expect(res.status).to.eq(200);
+              expect(res.body.success).to.eq(true);
+              done();
+            });
+        });
+    })
+  });
+
+  describe("removeUserFromTeam", () => {
+    it("should add a user to the team", (done) => {
+      chai.request(server)
+        .post("/api/users")
+        .send({
+          username: "test",
+          password: "12345"
+        })
+        .end((err, res) => {
+          var uid = res.body.user.id;
+          chai.request(server)
+            .post("/api/teams/1/add")
+            .send({
+              user_id: uid
+            })
+            .set("x-access-token", jwt_token)
+            .end((err, res) => {
+              chai.request(server)
+                .post("/api/teams/1/remove")
+                .send({
+                  user_id: uid
+                })
+                .set("x-access-token", jwt_token)
+                .end((err, res) => {
+                  // console.log(res.body);
+                  expect(res.status).to.eq(200);
+                  expect(res.body.success).to.eq(true);
+                  done();
+                });
+            });
+        });
+    })
+  });
 });

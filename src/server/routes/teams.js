@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import {postTeam, getTeams, getTeam, putTeam, deleteTeam} from '../controllers/team.js';
+import {postTeam, getTeams, getTeam, putTeam, deleteTeam, addUserToTeam, removeUserFromTeam} from '../controllers/team.js';
 
 const router = express.Router();
 
@@ -31,6 +31,11 @@ router.route('/:id')
   .put(team_admin, putTeam)
   .delete(team_admin, deleteTeam);
 
+router.route("/:id/add")
+  .post(team_admin, addUserToTeam);
+
+router.route("/:id/remove")
+  .post(team_admin, removeUserFromTeam);
 // router.route("/:id/remove")
 //   .post(removeCollectionFromTeam);
 //

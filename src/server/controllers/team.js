@@ -1,4 +1,5 @@
 import Team from '../models/team.js';
+import User from '../models/user.js';
 
 export function postTeam(req, res) {
   new Team({
@@ -99,6 +100,83 @@ export function deleteTeam(req, res) {
     })
     .catch(Team.NoRowsDeletedError, () => {
       res.json({success: false, errors: {message: "No rows deleted"}});
+    })
+    .catch(function(err) {
+      res.send({success: false, errors: err});
+    });
+}
+
+export function addUserToTeam(req, res) {
+  Team
+    .query(qb  => {
+      qb
+      .where({id: req.params.id});
+    })
+    .fetch({require: true})
+    .then(function(team) {
+      User
+      .where({id: req.body.user_id})
+      .fetch({require: true})
+      .then(user => {
+        user
+          .save({
+            team_id: team.id,
+            organization_id: req.user.attributes.organization_id
+          }, {
+            patch: true
+          })
+          .then(user => {
+            res.json({success: true, message: "Added user " + user.id + " to team " + team.id});
+          })
+          .catch(err => {
+            res.send({success: false, errors: err});
+          });
+      })
+      .catch(err => {
+        res.send({success: false, errors: err});
+      });
+    //   team.users().attach(req.body.user_id);
+    })
+    .catch(Team.NotFoundError, () => {
+      res.json({success: false, errors: "Team does not belong to your organization or does not exist"});
+    })
+    .catch(function(err) {
+      res.send({success: false, errors: err});
+    });
+}
+
+export function removeUserFromTeam(req, res) {
+  Team
+    .query(qb  => {
+      qb
+      .where({id: req.params.id});
+    })
+    .fetch({require: true})
+    .then(function(team) {
+      User
+      .where({id: req.body.user_id})
+      .fetch({require: true})
+      .then(user => {
+        user
+          .save({
+            team_id: null
+          }, {
+            patch: true
+          })
+          .then(user => {
+            res.json({success: true, message: "Removed user " + user.id + " from team " + team.id});
+          })
+          .catch(err => {
+            res.send({success: false, errors: err});
+          });
+      })
+      .catch(err => {
+        res.send({success: false, errors: err});
+      });
+    //   team.users().attach(req.body.user_id);
+    })
+    .catch(Team.NotFoundError, () => {
+      res.json({success: false, errors: "Team does not belong to your organization or does not exist"});
     })
     .catch(function(err) {
       res.send({success: false, errors: err});
