@@ -36,7 +36,7 @@ function login_function()
 	{
 		if(xhr.readyState == 4 && xhr.status == 200) 
 		{
-			// alert(xhr.responseText);
+			alert(xhr.responseText);
 			var json_data = JSON.parse(xhr.responseText);
 			if(json_data["success"] == true)
 			{

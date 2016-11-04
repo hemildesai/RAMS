@@ -1,4 +1,5 @@
 document.getElementById("logout_button").addEventListener("click", logout_function);
+document.getElementById("submit_button").addEventListener("click", search_function);
 
 $(document).ready(function() 
 	{
@@ -65,6 +66,10 @@ $(document).ready(function()
 		xhr.send(data);
 	}
 );
+
+function search_function() {
+	window.open("../search_client/index.html", "_self");
+}
 
 function logout_function() {
 

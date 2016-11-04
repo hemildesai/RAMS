@@ -1,4 +1,13 @@
 document.getElementById("save_button").addEventListener("click", save_function);
+document.getElementById("logout_button").addEventListener("click", logout_function);
+document.getElementById("submit_button").addEventListener("click", search_function);
+
+$(document).ready(function()
+	{
+		var navbar_p = document.getElementById("signed_in");
+		navbar_p.innerHTML = localStorage["Rams_usr_name"];
+	}
+);
 
 function save_function()
 {
@@ -58,4 +67,19 @@ function save_function()
 		}
 	}
 	xhr.send(params);
+}
+
+function logout_function() {
+
+	localStorage["Rams_usr_name"] = "";
+	localStorage["Rams_usr_tok"] = "";
+
+	localStorage.removeItem("Rams_usr_name");
+	localStorage.removeItem("Rams_usr_tok");
+
+	window.open("./home_rams.html", "_self");
+}
+
+function search_function() {
+	window.open("../search_client/index.html", "_self");
 }
