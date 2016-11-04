@@ -68,11 +68,11 @@ $(document).ready(function()
 
 function logout_function() {
 
-	window.open("./home_rams.html", "_self");
-
 	localStorage["Rams_usr_name"] = "";
 	localStorage["Rams_usr_tok"] = "";
 
 	localStorage.removeItem("Rams_usr_name");
 	localStorage.removeItem("Rams_usr_tok");
+
+	window.open("./home_rams.html", "_self");
 }
