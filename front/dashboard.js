@@ -7,7 +7,7 @@ $(document).ready(function()
 		navbar_p.innerHTML = localStorage["Rams_usr_name"];
 
 		var xhr = new XMLHttpRequest();
-		var url = "http://localhost:3000/api/resources";
+		var url = localStorage["rams_server"] + "api/resources";
 		var data = "username="+localStorage["Rams_usr_name"];
 		xhr.open("GET", url);
 

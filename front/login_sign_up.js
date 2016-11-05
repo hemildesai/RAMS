@@ -1,7 +1,7 @@
 document.getElementById("login_button").addEventListener("click", login_function);
 document.getElementById("sign_up_button").addEventListener("click", signUp_function);
 
-function login_function() 
+function login_function()
 {
 	var users_user_name = document.getElementById("user_name").value;
 	var users_user_pass = document.getElementById("user_pass").value;
@@ -26,15 +26,15 @@ function login_function()
 	}
 
 	var xhr = new XMLHttpRequest();
-	var url = "http://localhost:3000/api/authenticate";
+	var url = localStorage["rams_server"] + "api/authenticate";
 	var params = JSON.stringify({username:users_user_name, password:users_user_pass});
 	xhr.open("POST", url, true);
 
 	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
 
-	xhr.onreadystatechange = function() 
+	xhr.onreadystatechange = function()
 	{
-		if(xhr.readyState == 4 && xhr.status == 200) 
+		if(xhr.readyState == 4 && xhr.status == 200)
 		{
 			alert(xhr.responseText);
 			var json_data = JSON.parse(xhr.responseText);
@@ -48,14 +48,14 @@ function login_function()
 			{
 				var error_data = "Wrong Username or Password!";
 				document.getElementById("modal_p").innerHTML = error_data;
-				$("#message_modal").modal();	
+				$("#message_modal").modal();
 			}
 		}
 	}
 	xhr.send(params);
 }
 
-function signUp_function() 
+function signUp_function()
 {
 	var users_user_name = document.getElementById("sign_user_name").value;
 	var users_user_pass = document.getElementById("sign_user_pass").value;
@@ -80,20 +80,21 @@ function signUp_function()
 	}
 
 	var xhr = new XMLHttpRequest();
-	var url = "http://localhost:3000/api/users";
+    var url = localStorage["rams_server"] + "api/users";
 	var params = JSON.stringify({username:users_user_name, password:users_user_pass});
 	xhr.open("POST", url, true);
 
 	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
 
-	xhr.onreadystatechange = function() 
+	xhr.onreadystatechange = function()
 	{
-		if(xhr.readyState == 4 && xhr.status == 200) 
+		if(xhr.readyState == 4 && xhr.status == 200)
 		{
 			alert(xhr.responseText);
 			var json_data = JSON.parse(xhr.responseText);
 			if(json_data["success"] == true)
 			{
+                localStorage["Rams_usr_name"] = users_user_name;
 				window.open("./dashboard.html", "_self");
 			}
 			else
@@ -105,7 +106,7 @@ function signUp_function()
 				else if(error_data.hasOwnProperty("code"))
 					error_msg = "Username already exists!";
 				document.getElementById("modal_p").innerHTML = error_msg;
-				$("#message_modal").modal();	
+				$("#message_modal").modal();
 			}
 		}
 	}

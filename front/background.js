@@ -6,6 +6,8 @@ chrome.browserAction.onClicked.addListener(function(tab){
 	// Get current Tab URL
 	var curr_tab_url = tab.url;
 
+    localStorage["rams_server"] = "https://rams-asamanta94.c9users.io/"
+    
 	// Check for empty URL
 	if(curr_tab_url == "about:blank" || curr_tab_url == "")
 	{
