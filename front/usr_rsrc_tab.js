@@ -36,7 +36,7 @@ function save_function()
 	}
 
     var xhr = new XMLHttpRequest();
-	var url = "http://localhost:3000/api/resources";
+	var url = localStorage["rams_server"] + "api/resources";
 	var params = JSON.stringify({user_id: localStorage["Rams_usr_name"], name: rsrc_name, link: rsrc_link, is_private: rsrc_priv});
 	xhr.open("POST", url, true);
 
