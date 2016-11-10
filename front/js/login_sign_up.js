@@ -80,7 +80,7 @@ function signUp_function()
 	}
 
 	var xhr = new XMLHttpRequest();
-    var url = localStorage["rams_server"] + "api/users";
+  var url = localStorage["rams_server"] + "api/users";
 	var params = JSON.stringify({username:users_user_name, password:users_user_pass});
 	xhr.open("POST", url, true);
 
@@ -90,12 +90,40 @@ function signUp_function()
 	{
 		if(xhr.readyState == 4 && xhr.status == 200)
 		{
-			alert(xhr.responseText);
+			// alert(xhr.responseText);
 			var json_data = JSON.parse(xhr.responseText);
 			if(json_data["success"] == true)
 			{
-                localStorage["Rams_usr_name"] = users_user_name;
-				window.open("../html/dashboard.html", "_self");
+        localStorage["Rams_usr_name"] = users_user_name;
+        xhr = new XMLHttpRequest();
+      	url = localStorage["rams_server"] + "api/authenticate";
+      	params = JSON.stringify({username:users_user_name, password:users_user_pass});
+      	xhr.open("POST", url, true);
+      
+      	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+      
+      	xhr.onreadystatechange = function()
+      	{
+      		if(xhr.readyState == 4 && xhr.status == 200)
+      		{
+      			// alert(xhr.responseText);
+      			var json_data = JSON.parse(xhr.responseText);
+      			if(json_data["success"] == true)
+      			{
+      				localStorage["Rams_usr_name"] = users_user_name;
+      				localStorage["Rams_usr_tok"] = json_data["token"];
+      				window.open("../html/dashboard.html", "_self");
+      			}
+      			else
+      			{
+      				var error_data = "Wrong Username or Password!";
+      				document.getElementById("modal_p").innerHTML = error_data;
+      				$("#message_modal").modal();
+      			}
+      		}
+      	}
+      	xhr.send(params);
+				// window.open("../html/dashboard.html", "_self");
 			}
 			else
 			{
