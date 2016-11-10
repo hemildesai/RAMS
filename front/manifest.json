@@ -7,11 +7,11 @@
 
   "browser_action": {
     "default_title": "RAMS",
-    "default_icon": "./front/images/file-sharing.png"
+    "default_icon": "./images/file-sharing.png"
     // "default_popup": "./front/background.html"
   },
   "background": {
-    "scripts": ["./front/background.js"]
+    "scripts": ["./js/background.js"]
     // "persistent": false
   },
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",

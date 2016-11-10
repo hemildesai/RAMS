@@ -42,7 +42,7 @@ function login_function()
 			{
 				localStorage["Rams_usr_name"] = users_user_name;
 				localStorage["Rams_usr_tok"] = json_data["token"];
-				window.open("./dashboard.html", "_self");
+				window.open("../html/dashboard.html", "_self");
 			}
 			else
 			{
@@ -95,7 +95,7 @@ function signUp_function()
 			if(json_data["success"] == true)
 			{
                 localStorage["Rams_usr_name"] = users_user_name;
-				window.open("./dashboard.html", "_self");
+				window.open("../html/dashboard.html", "_self");
 			}
 			else
 			{
