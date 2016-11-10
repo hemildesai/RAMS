@@ -1,7 +1,7 @@
 document.getElementById("logout_button").addEventListener("click", logout_function);
 document.getElementById("submit_button").addEventListener("click", search_function);
 
-$(document).ready(function() 
+$(document).ready(function()
 	{
 		var navbar_p = document.getElementById("signed_in");
 		navbar_p.innerHTML = localStorage["Rams_usr_name"];
@@ -13,9 +13,9 @@ $(document).ready(function()
 
 		xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
 
-		xhr.onreadystatechange = function() 
+		xhr.onreadystatechange = function()
 		{
-			if(xhr.readyState == 4) 
+			if(xhr.readyState == 4)
 			{
 				var rsrc_tbody = document.getElementById("rsrc_tbl");
 				var json_data = JSON.parse(xhr.responseText);
@@ -59,7 +59,7 @@ $(document).ready(function()
 				{
 					var error_data = "Error Loading Resources!";
 					document.getElementById("modal_p").innerHTML = error_data;
-					$("#message_modal").modal();	
+					$("#message_modal").modal();
 				}
 			}
 		}
@@ -79,5 +79,5 @@ function logout_function() {
 	localStorage.removeItem("Rams_usr_name");
 	localStorage.removeItem("Rams_usr_tok");
 
-	window.open("./home_rams.html", "_self");
+	window.open("../html/home_rams.html", "_self");
 }

@@ -43,15 +43,15 @@ function save_function()
 	xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
 	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
 
-	xhr.onreadystatechange = function() 
+	xhr.onreadystatechange = function()
 	{
-		if(xhr.readyState == 4 && xhr.status == 200) 
+		if(xhr.readyState == 4 && xhr.status == 200)
 		{
 			alert(xhr.responseText);
 			var json_data = JSON.parse(xhr.responseText);
 			if(json_data["success"] == true)
 			{
-				window.open("./dashboard.html", "_self");
+				window.open("../html/dashboard.html", "_self");
 			}
 			else
 			{
@@ -62,7 +62,7 @@ function save_function()
 				else if(error_data.hasOwnProperty("code"))
 					error_msg = "Username already exists!";
 				document.getElementById("modal_p").innerHTML = error_msg;
-				$("#message_modal").modal();	
+				$("#message_modal").modal();
 			}
 		}
 	}
@@ -77,7 +77,7 @@ function logout_function() {
 	localStorage.removeItem("Rams_usr_name");
 	localStorage.removeItem("Rams_usr_tok");
 
-	window.open("./home_rams.html", "_self");
+	window.open("../html/home_rams.html", "_self");
 }
 
 function search_function() {
