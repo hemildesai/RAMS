@@ -11,5 +11,5 @@ function change_function() {
   edit_div.innerHTML = "";
   var form_pwd = document.createElement("form");
   var form_div = document.createElement("div");
-  form_div.class = "";
+  form_div.class = "form-group";
 }

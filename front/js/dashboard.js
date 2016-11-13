@@ -28,6 +28,7 @@ $(document).ready(function()
 						var rsrc = resources_usr[i];
 						var rsrc_row = document.createElement("tr");
 						var link_td = document.createElement("td");
+						var id_td = document.createElement("td");
 						var name_td = document.createElement("td");
 						var desc_td = document.createElement("td");
 						var tag_td = document.createElement("td");
@@ -38,6 +39,7 @@ $(document).ready(function()
 						rsrc_a.href = rsrc["link"];
 
 						var link_txt = document.createTextNode(rsrc["link"]);
+						var id_txt = document.createTextNode(rsrc["id"]);
 						var name_txt = document.createTextNode(rsrc["name"]);
 						var desc_txt = document.createTextNode("None");
 						var tag_txt = document.createTextNode("None");
@@ -57,8 +59,11 @@ $(document).ready(function()
 						desc_td.id = "desc_td_" + i;
 						tag_td.appendChild(tag_txt);
 						tag_td.id = "tag_td_" + i;
+						id_td.appendChild(id_txt);
+						id_td.id = "id_td_" + i;
 
 						rsrc_row.appendChild(name_td);
+						rsrc_row.appendChild(id_td);
 						rsrc_row.appendChild(link_td);
 						rsrc_row.appendChild(desc_td);
 						rsrc_row.appendChild(tag_td);
@@ -98,20 +103,46 @@ function logout_function() {
 
 function delete_function() {
   var num_id = this.id.split('_')[2];
+  var rsrc_tbl = document.getElementById("rsrc_tbl");
+  var rsrc_id = rsrc_tbl.rows[num_id].cells[1].textContent;
   
   var xhr = new XMLHttpRequest();
-  var url = localStorage["rams_server"] + "api/resources/delete";
+  var url = localStorage["rams_server"] + "api/resources/" + rsrc_id;
+  var params = null;
+  xhr.open("DELETE", url, true);
   
-  var rsrc_tbl = document.getElementById("rsrc_tbl");
-  rsrc_tbl.deleteRow(num_id);
+  xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+  xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
   
-  var i = 0;
-  for(i = num_id; i < rsrc_tbl.rows.length; i++)
+  xhr.onreadystatechange = function()
   {
-    var rsrc_row = rsrc_tbl.rows[i];
-    rsrc_row.id = "rsrc_" + i;
-    
-    var delete_btn_rw = rsrc_row.cells[1].children[1];
-    delete_btn_rw.id = "del_btn_" + i;
+    if(xhr.readyState == 4)
+    {
+      alert(xhr.responseText);
+      var json_data = JSON.parse(xhr.responseText);
+			if(json_data["success"] === true)
+			{
+			  rsrc_tbl.deleteRow(num_id);
+      
+        var i = 0;
+        for(i = num_id; i < rsrc_tbl.rows.length; i++)
+        {
+          var rsrc_row = rsrc_tbl.rows[i];
+          rsrc_row.id = "rsrc_" + i;
+          
+          var delete_btn_rw = rsrc_row.cells[1].children[1];
+          delete_btn_rw.id = "del_btn_" + i;
+        }
+			}
+			else
+		  {
+		    var error_msg = json_data["errors"]["message"];
+		    document.getElementById("modal_p").innerHTML = error_msg;
+				$("#message_modal").modal();
+		  }
+      // var rsrc_tbl = document.getElementById("rsrc_tbl");
+    }
   }
+  
+  xhr.send(params);
 }
