@@ -19,7 +19,7 @@ $(document).ready(function()
 			{
 				var rsrc_tbody = document.getElementById("rsrc_tbl");
 				var json_data = JSON.parse(xhr.responseText);
-				if(json_data["success"] == true)
+				if(json_data["success"] === true)
 				{
 					var resources_usr = json_data["resources"];
 					var i = 0;
@@ -33,8 +33,8 @@ $(document).ready(function()
 						var tag_td = document.createElement("td");
 
 						var rsrc_a = document.createElement('a');
-						var link_txt = document.createTextNode(rsrc["link"]);
-						rsrc_a.appendChild(link_txt);
+						var lnk_txt = document.createTextNode(rsrc["link"]);
+						rsrc_a.appendChild(lnk_txt);
 						rsrc_a.href = rsrc["link"];
 
 						var link_txt = document.createTextNode(rsrc["link"]);
@@ -98,6 +98,9 @@ function logout_function() {
 
 function delete_function() {
   var num_id = this.id.split('_')[2];
+  
+  var xhr = new XMLHttpRequest();
+  var url = localStorage["rams_server"] + "api/resources/delete";
   
   var rsrc_tbl = document.getElementById("rsrc_tbl");
   rsrc_tbl.deleteRow(num_id);
