@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=600, height=800, initial-scale=1">
-	<title>Login/Sign-Up</title>
+	<title>RAMS - Profile</title>
 	<script type="text/javascript" src="../js/background.js"></script>
 	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<!-- [if lt IE 9]>
@@ -37,11 +37,11 @@
 					</ul>
 					<ul class="nav navbar-nav">
 					<li class="nav-item">
-						<p class="navbar-text">Signed in as <a href="#" id="signed_in" class="navbar-link"></a></p>
+						<p class="navbar-text">Signed in as <a href="./profile_rams.html" id="signed_in" class="navbar-link"></a></p>
 					</li>
 					<form class="navbar-form navbar-right">
 						<div class="form-group">
-							<input class="btn btn-primary nav-link" id="logout_button" value="Logout"></input>
+							<input class="btn btn-primary nav-link" id="logout_button" value="Logout"/>
 						</div>
 					</form>
 					</ul>
@@ -61,7 +61,18 @@
 				<!-- Panel Body -->
 				<div class="container-fluid">
 					<div class="panel panel-body">
-
+					  <div class="row">
+					    <div class="col-md-6">
+					      <h1><code>Profile Information</code></h1><br>
+					    </div>
+					    
+					    <div class="col-md-6">
+					      <h1><code>Change Profile Information</code></h1><br>
+					      <div class="container-fluid" id="edit_div">
+                  <button class="btn btn-success btn-lg" id="change_btn">Change Password</button>
+					      </div>
+					    </div>
+					  </div>
 					</div>
 				</div>
 			</div>
@@ -90,5 +101,7 @@
 
 	<script src="../bootstrap/js/jquery-3.1.1.min.js"></script>
 	<script src="../bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/profile_rams.js"></script>
+	<script src="../js/dashboard.js"></script>
 	</body>
 </html>
