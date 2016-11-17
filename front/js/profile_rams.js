@@ -3,6 +3,10 @@ $(document).ready(function() {
   var navbar_p = document.getElementById("signed_in");
 	navbar_p.innerHTML = localStorage["Rams_usr_name"];
   
+  var user_id_h = document.getElementById("usr_name_value");
+  var text_usr = document.createTextNode(localStorage["Rams_usr_name"]);
+  user_id_h.appendChild(text_usr);
+  
   document.getElementById("change_btn").addEventListener("click", change_function);
 });
 
@@ -103,7 +107,14 @@ function sub_function() {
 			{
 				// localStorage["Rams_usr_name"] = users_user_name;
 				// localStorage["Rams_usr_tok"] = json_data["token"];
-				window.open("../html/dashboard.html", "_self");
+				var title = document.getElementById("modal_t");
+				title.innerHTML = "<code style=\"color:green\">Success!</code>";
+				document.getElementById("modal_p").innerHTML = "Successfully chagned password.";
+				$("#message_modal").modal();
+				
+				document.getElementById("modal_close_btn").addEventListener("click", function() {
+				  window.open("../html/dashboard.html", "_self");
+				});
 			}
 			else
 			{
