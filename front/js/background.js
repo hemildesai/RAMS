@@ -1,6 +1,3 @@
-/* Global Tag list */
-var tag_list = ["tag_1", "tag_2", "tag_3"];
-
 /* Chrome Extension button OnClick Action*/
 chrome.browserAction.onClicked.addListener(function(tab){
 	// Get current Tab URL
