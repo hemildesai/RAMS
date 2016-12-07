@@ -35,7 +35,7 @@ export function getProject(req, res) {
         this.where({is_private: false}).orWhere({user_id: req.user.id});
       })
     })
-    .fetch({require: true, withRelated: ["user"]})
+    .fetch({require: true, withRelated: ["user", "collections"]})
     .then(function(project) {
       res.json({success: true, project});
     })
