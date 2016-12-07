@@ -25,9 +25,9 @@ const Organization = Bookshelf.Model.extend({
     return this.hasMany("Team");
   },
 
-  // users: function() {
-  //   return this.hasMany("User");
-  // }
+  users: function() {
+    return this.hasMany("User");
+  }
 });
 
 export default Bookshelf.model("Organization", Organization);

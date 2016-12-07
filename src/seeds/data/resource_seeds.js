@@ -1,10 +1,12 @@
 var fs = require("fs");
+var Moniker = require("moniker");
 
 var data = fs.readFileSync("./data.json");
 data = JSON.parse(data);
 
 var knex_seeds = [];
 var cr_seeds = [];
+var tag_seeds = [];
 
 function randomIntInc (low, high) {
   return Math.floor(Math.random() * (high - low + 1) + low);
@@ -29,6 +31,9 @@ data.data.forEach(function(item) {
   count = count + 1;
   knex_seeds.push(resource);
   cr_seeds.push({collection_id: randomIntInc(1,4), resource_id: count - 1});
+  for(var i = 0; i < 3; i++) {
+    tag_seeds.push({title: Moniker.choose(), resource_id: resource.id});
+  }
 });
 
 exports.seed = function(knex, Promise) {
@@ -37,10 +42,16 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       return knex("collections_resources").del()
         .then(function() {
-          return knex("resources").insert(knex_seeds)
-            .then(function() {
-              return knex("collections_resources").insert(cr_seeds);
-            });
+          return knex("tags").del()
+          .then(function() {
+            return knex("resources").insert(knex_seeds)
+              .then(function() {
+                return knex("collections_resources").insert(cr_seeds)
+                  .then(function() {
+                     return knex("tags").insert(tag_seeds);
+                  });
+              });
+          });
         });
     });
 };

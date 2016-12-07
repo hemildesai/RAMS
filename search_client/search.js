@@ -69,4 +69,18 @@ search.addWidget(
   })
 );
 
+search.addWidget(
+  instantsearch.widgets.refinementList({
+    container: '#tags',
+    attributeName: 'tags.title',
+    operator: 'and',
+    limit: 10,
+    cssClasses: {
+      list: 'nav nav-list',
+      count: 'badge pull-right',
+      active: 'active'
+    }
+  })
+);
+
 search.start();

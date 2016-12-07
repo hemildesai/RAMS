@@ -5,7 +5,8 @@ export function postResource(req, res) {
     user_id: req.user.id,
     name: req.body.name,
     link: req.body.link,
-    is_private: req.body.is_private
+    is_private: req.body.is_private,
+    description: req.body.description
   })
   .save()
   .then(resource => {

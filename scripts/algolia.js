@@ -1,23 +1,38 @@
 var _ = require('lodash');
 var async = require('async');
+var Promise = require('bluebird');
 import Resource from '../src/server/models/resource.js';
+import Collection from '../src/server/models/collection.js';
 
 var algoliasearch = require('algoliasearch');
 var client = algoliasearch("1W6YX64AEN", "625f888db6fb5a3f5410515f96c8efa5");
 var resource_index = client.initIndex('resource');
 
 Resource
-  .fetchAll({withRelated: ["collections"]})
+  .fetchAll({withRelated: ["collections", "tags"]})
   .then(function(resources) {
+    var mres = resources;
     resources = resources.toJSON();
 
-    resources = resources.map(function(resource) {
-      resource.objectID = resource.id;
-      resource.collections = resource.collections.map(function(collection) {
+    resources = mres.map(function(resource) {
+      var objectID = resource.id;
+      var collections = resource.toJSON().collections.map(function(collection) {
         return {
           title: collection.title
         };
       });
+
+      var tags = resource.toJSON().tags.map(function(tag) {
+        return {
+          title: tag.title
+        };
+      });
+
+      resource = resource.toJSON();
+      resource.objectID = objectID;
+      resource.collections = collections;
+      resource.tags = tags;
+
       return resource;
     });
 

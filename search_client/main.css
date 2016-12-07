@@ -124,6 +124,28 @@ section aside #genres .active label {
 section aside #genres .active .badge {
   background: #333333;
 }
+section aside #tags label {
+  display: block;
+  cursor: pointer;
+  padding: 4px 4px 4px 8px;
+  font-weight: normal;
+  font-size: .9em;
+  margin: 0 0 -1px;
+}
+section aside #tags label:hover {
+  color: #FFFFFF;
+  background: #333333;
+}
+section aside #tags label input {
+  display: none;
+}
+section aside #tags .active label {
+  border: 1px solid #CE1312;
+  margin-top: -1px;
+}
+section aside #tags .active .badge {
+  background: #333333;
+}
 section aside #ratings {
   margin-left: 10px;
 }
