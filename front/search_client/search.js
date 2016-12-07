@@ -20,7 +20,7 @@ search.addWidget(
 );
 
 var hitTemplate =
-  '<div class="container-fluid hit media" style="margin-top: 10px;">' +
+  '<div class="hit media" style="margin-top: 10px;">' +
     '<div class="media-left">' +
       '<div class="media-object text-center" style="margin-top: 6px;"><a href="{{{link}}}" class="logo"><i class="fa fa-link"></i></a></div>' +
     '</div>' +
@@ -60,20 +60,6 @@ search.addWidget(
     container: '#genres',
     attributeName: 'collections.title',
     operator: 'or',
-    limit: 10,
-    cssClasses: {
-      list: 'nav nav-list',
-      count: 'badge pull-right',
-      active: 'active'
-    }
-  })
-);
-
-search.addWidget(
-  instantsearch.widgets.refinementList({
-    container: '#tags',
-    attributeName: 'tags.title',
-    operator: 'and',
     limit: 10,
     cssClasses: {
       list: 'nav nav-list',
