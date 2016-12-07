@@ -9,6 +9,7 @@ var rules = {
 
 require('./user');
 require("./collection");
+require("./tag");
 
 const Resource = Bookshelf.Model.extend({
   tableName: "resources",
@@ -24,6 +25,10 @@ const Resource = Bookshelf.Model.extend({
 
   collections: function() {
     return this.belongsToMany("Collection");
+  },
+
+  tags: function() {
+    return this.hasMany("Tag");
   },
 
   user: function() {
