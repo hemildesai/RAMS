@@ -17,7 +17,29 @@ $(document).ready(function() {
       var json_data = JSON.parse(xhr.responseText);
       if(json_data.success == true)
       {
-        
+        var proj_tbl = document.getElementById("proj_tbl");
+        var projects = json_data["projects"];
+        var i = 0;
+        for(i = 0; i < projects.length; i++)
+        {
+          var proj = projects[i];
+          var prow = document.createElement("tr");
+          var pid = document.createElement("td");
+          var ptitle = document.createElement("td");
+          var ppriv = document.createElement("td");
+          
+          ptitle.innerHTML = proj["title"] + " <button class=\"btn btn-primary pull-right\" id=\"proj_" + i + "\">Show resources</button>";
+          pid.innerHTML = proj["id"];
+          ppriv.innerHTML = (proj["is_private"] == 0 ? "false" : "true");
+          
+          prow.appendChild(ptitle);
+          prow.appendChild(pid);
+          prow.appendChild(ppriv);
+          
+          proj_tbl.appendChild(prow);
+          
+          document.getElementById("proj_" + i).addEventListener("click", show_resources);
+        }
       }
       else
       {
@@ -28,6 +50,12 @@ $(document).ready(function() {
   
   xhr.send(null);
 });
+
+function show_resources()
+{
+  event.preventDefault();
+  console.log(this);
+}
 
 function create_proj()
 {
@@ -84,7 +112,7 @@ function submit_proj(event)
 {
   event.preventDefault();
   
-  var is_proj_priv = document.getElementById("priv_proj").checked;
+  var is_proj_priv = (document.getElementById("priv_proj").checked === true) ? 1 : 0;
   var usr_new_proj = document.getElementById("usr_new_proj").value;
   
   if(usr_new_proj == "")
@@ -105,10 +133,10 @@ function submit_proj(event)
     if(xhr.readyState == 4 && xhr.status == 200)
     {
       var json_data = JSON.parse(xhr.responseText);
-      console.log(json_data);
+      alert(json_data["success"]);
       if(json_data["success"] == true)
       {
-        
+        location.reload(true);
       }
     }
   };
