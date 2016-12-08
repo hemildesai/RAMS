@@ -1,5 +1,12 @@
 document.getElementById("create_proj_btn").addEventListener("click", create_proj);
 
+var pages_resources;
+var pages_projects;
+var list_resources;
+var list_projects;
+var curr_proj_page;
+var curr_rsrc_page;
+
 $(document).ready(function() {
   var data = "username=" + localStorage["Rams_usr_name"];
 
@@ -20,7 +27,11 @@ $(document).ready(function() {
         var proj_tbl = document.getElementById("proj_tbl");
         var projects = json_data["projects"];
         var i = 0;
-        for(i = 0; i < projects.length; i++)
+        if(projects.length <= 10)
+          pages_projects = 1;
+        else
+          pages_projects = (projects.length/10);
+        for(i = 0; i < 10; i++)
         {
           var proj = projects[i];
           var prow = document.createElement("tr");
@@ -40,6 +51,8 @@ $(document).ready(function() {
           
           document.getElementById("proj_" + i).addEventListener("click", show_resources);
         }
+        list_projects = projects;
+        pagination_proj();
       }
       else
       {
@@ -51,10 +64,84 @@ $(document).ready(function() {
   xhr.send(null);
 });
 
+function pagination_proj()
+{
+  var ul_proj = document.createElement("ul");
+  ul_proj.className = "pagination";
+  var i = 0;
+  for(i = 0; i < pages_projects; i++)
+    ul_proj.innerHTML += "<li><a href=\"#\" id=\"page_proj_" + (i + 1) + "\">" + (i + 1) + "</li>";
+  
+  var center_div = document.createElement("center");
+  center_div.innerHTML = "<div class=\"container-fluid\" id=\"pages_div\"></div>";
+  var row_tbl = document.getElementById("row_tbl_proj");
+  row_tbl.appendChild(center_div);
+  document.getElementById("pages_div").appendChild(ul_proj);
+  
+  for(i = 0; i < pages_projects; i++)
+    document.getElementById("page_proj_" + (i + 1)).addEventListener("click", page_proj_content);
+}
+
+function page_proj_content()
+{
+  var page_num = Number(this.id.split('_')[2]);
+  var start = (page_num - 1) * 10;
+  if(list_projects <= (start + 10))
+    end = list_projects.length - (start);
+  else
+    end = 10;
+  var i = 0;
+  var proj_tbl = document.getElementById("proj_tbl");
+  proj_tbl.innerHTML = "";
+  for(i = 0; i < end; i++)
+  {
+    var proj = list_projects[start + i];
+    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>"
+  }
+}
+
 function show_resources()
 {
   event.preventDefault();
-  console.log(this);
+  
+  var id = this.id.split('_')[1];
+  var proj_tbl = document.getElementById("proj_tbl");
+  var proj_id = proj_tbl.rows[id].cells[1].textContent;
+  
+  var xhr = new XMLHttpRequest();
+	var url = localStorage["rams_server"] + "api/projects/" + proj_id + "/collections";
+	xhr.open("GET", url);
+
+	xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4)
+		{
+		  var json_data = JSON.parse(this.responseText);
+		  var tbl_h = document.getElementById("proj_row_1");
+		  tbl_h.innerHTML = "";
+		  tbl_h.innerHTML = "<th>Name</th><th>ID</th><th>Link</th><th>Description</th><th>Tags</th>";
+		  var proj_tbl = document.getElementById("proj_tbl");
+		  proj_tbl.innerHTML = "";
+		  
+		  list_resources = json_data["collections"];
+		  if(list_resources.length <= 25)
+		    pages_resources = 1;
+		  else
+		    pages_resources = (list_resources.length/25) + 1
+		  var i = 0;
+		  for(i = 0; i < 25; i++)
+		  {
+		    var rsrc = list_resources[i];
+		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "<button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\"></buttom></td><td>" + rsrc["id"] + "</td><td>" + rsrc["link"]+ "</td><td>None</td><td>None</td></tr>";
+		  }
+		  curr_rsrc_page = 1;
+		  
+		}
+	}
+	
+	xhr.send(null);
 }
 
 function create_proj()
