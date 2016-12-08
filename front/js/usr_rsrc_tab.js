@@ -11,12 +11,12 @@ $(document).ready(function()
 
 function save_function()
 {
-    var rsrc_link = document.getElementById("rsrc_link").value;
-    var rsrc_name = document.getElementById("rsrc_name").value;
-    var rsrc_desc = document.getElementById("rsrc_name").value;
-    var rsrc_priv = document.getElementById("rsrc_priv").checked;
+  var rsrc_link = document.getElementById("rsrc_link").value;
+  var rsrc_name = document.getElementById("rsrc_name").value;
+  var rsrc_desc = document.getElementById("rsrc_name").value;
+  var rsrc_priv = document.getElementById("rsrc_priv").checked;
 
-    if(rsrc_link == "" && rsrc_name == "")
+  if(rsrc_link == "" && rsrc_name == "")
 	{
 		document.getElementById("modal_p").innerHTML = "Resource Link and name cannot be empty.";
 		$("#message_modal").modal();
