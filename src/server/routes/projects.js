@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import {postProject, getProjects, getProject, putProject, deleteProject, getPrivateProjects, removeCollectionFromProject, addCollectionToProject} from '../controllers/project.js';
+import {postProject, getProjects, getProject, getCollectionsForProjects, putProject, deleteProject, getPrivateProjects, removeCollectionFromProject, addCollectionToProject} from '../controllers/project.js';
 
 const router = express.Router();
 
@@ -23,5 +23,8 @@ router.route("/:id/remove")
 
 router.route("/:id/add")
   .post(addCollectionToProject);
+
+router.route("/:id/collections")
+  .get(getCollectionsForProjects);
 
 module.exports = router;

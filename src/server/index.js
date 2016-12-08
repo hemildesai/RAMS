@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import morgan from 'morgan';
 import passport from 'passport';
+import messenger from './bots/messenger.js';
 
 import db from '../db';
 
@@ -25,6 +26,7 @@ const port = process.env.PORT || 3000;
 
 import routes from "./routes";
 routes(app);
+messenger(app);
 
 app.listen(port, () => {
   console.log("app listening on port " + port);

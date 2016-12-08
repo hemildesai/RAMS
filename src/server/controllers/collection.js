@@ -38,6 +38,25 @@ export function getCollection(req, res) {
         this.where({is_private: false}).orWhere({user_id: req.user.id});
       })
     })
+    .fetch({require: true})
+    .then(function(collection) {
+      res.json({success: true, collection});
+    })
+    .catch(Collection.NotFoundError, () => {
+      res.json({success: false, errors: "You are not authorized to view this collection"});
+    })
+    .catch(function(err) {
+      res.send({success: false, errors: err});
+    });
+}
+
+export function getResourcesForCollection(req, res) {
+  Collection
+    .query(qb  => {
+      qb.where({id: req.params.id}).andWhere(function() {
+        this.where({is_private: false}).orWhere({user_id: req.user.id});
+      })
+    })
     .fetch({require: true, withRelated: ["resources"]})
     .then(function(collection) {
       res.json({success: true, collection});

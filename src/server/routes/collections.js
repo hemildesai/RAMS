@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import {postCollection, getCollections, getCollection, putCollection, deleteCollection, getPrivateCollections, removeResourceFromCollection, addResourceToCollection} from '../controllers/collection.js';
+import {postCollection, getCollections, getCollection, getResourcesForCollection, putCollection, deleteCollection, getPrivateCollections, removeResourceFromCollection, addResourceToCollection} from '../controllers/collection.js';
 
 const router = express.Router();
 
@@ -23,5 +23,8 @@ router.route("/:id/remove")
 
 router.route("/:id/add")
   .post(addResourceToCollection);
+
+router.route("/:id/resources")
+  .get(getResourcesForCollection);
 
 module.exports = router;

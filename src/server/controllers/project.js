@@ -35,7 +35,26 @@ export function getProject(req, res) {
         this.where({is_private: false}).orWhere({user_id: req.user.id});
       })
     })
-    .fetch({require: true, withRelated: ["user", "collections"]})
+    .fetch({require: true, withRelated: ["user"]})
+    .then(function(project) {
+      res.json({success: true, project});
+    })
+    .catch(Project.NotFoundError, () => {
+      res.json({success: false, errors: "You are not authorized to view this project"});
+    })
+    .catch(function(err) {
+      res.send({success: false, errors: err});
+    });
+}
+
+export function getCollectionsForProjects(req, res) {
+  Project
+    .query(qb  => {
+      qb.where({id: req.params.id}).andWhere(function() {
+        this.where({is_private: false}).orWhere({user_id: req.user.id});
+      })
+    })
+    .fetch({require: true, withRelated: ["collections"]})
     .then(function(project) {
       res.json({success: true, project});
     })
