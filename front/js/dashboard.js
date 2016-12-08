@@ -27,12 +27,12 @@ $(document).ready(function()
 				{
 					var resources_usr = json_data["resources"];
 					var i = 0;
-					if(resources_usr.length <= 10)
+					if(resources_usr.length <= 25)
 					  pages = 1;
 					else
-					  pages = (resources_usr.length / 10) + 1;
+					  pages = (resources_usr.length / 25) + 1;
 					list_resources = resources_usr;
-					for(i = 0; i < 10; i++)
+					for(i = 0; i < 25; i++)
 					{
 						var rsrc = resources_usr[i];
 						var rsrc_row = document.createElement("tr");
@@ -164,12 +164,12 @@ function page_content()
 {
   var page_id = this.id;
   curr_page = Number(page_id[page_id.length - 1]);
-  var start = (Number(page_id[page_id.length - 1]) - 1) * 10;
+  var start = (Number(page_id[page_id.length - 1]) - 1) * 25;
   var end = 0;
-  if(list_resources.length <= (start + 10))
+  if(list_resources.length <= (start + 25))
     end = list_resources.length - (start);
   else
-    end = 10;
+    end = 25;
   var rsrc_tbody = document.getElementById("rsrc_tbl");
   rsrc_tbl.innerHTML = "";
   for(i = 0; i < end; i++)
