@@ -134,7 +134,7 @@ function add_to_collection_function()
 		if(xhr.readyState == 4)
 		{
 		  var list_html = "<div class=\"dropdown\">" +
-        "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Dropdown Example" +
+        "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Collections" +
         "<span class=\"caret\"></span></button>" +
         "<ul class=\"dropdown-menu\">";
       
@@ -149,6 +149,8 @@ function add_to_collection_function()
       list_html += "</ul>";
       list_html += "</div>";
       
+      document.getElementById("modal_h").style.color = "green";
+      document.getElementById("modal_h").innerHTML = "Add Resource to a Collection.";
       document.getElementById("modal_p").innerHTML = list_html;
       
       for(i = 0; i < collections_list.length; i++)

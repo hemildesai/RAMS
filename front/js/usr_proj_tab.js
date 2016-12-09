@@ -312,10 +312,10 @@ function show_resources()
 		  for(i = 0; i < end; i++)
 		  {
 		    var rsrc = list_resources[i];
-		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "</td><td>" + rsrc["id"] + "</td><td>" + rsrc["link"]+ "<button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\">Delete from Collection</button></td><td>None</td><td>None</td></tr>";
+		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "</td><td>" + rsrc["id"] + "</td><td><a href=\"" + rsrc["link"] + "\">" + rsrc["link"]+ "</a><button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\">Delete from Collection</button></td><td>None</td><td>None</td></tr>";
 		  }
 		  curr_rsrc_page = 1;
-		  
+		  document.getElementById("pages_div").innerHTML = "";
 		}
 	}
 	
@@ -408,3 +408,9 @@ function submit_proj(event)
   
   xhr.send(data);
 }
+
+$(".tiptext").mouseover(function() {
+    $(this).children(".description").show();
+}).mouseout(function() {
+    $(this).children(".description").hide();
+});
