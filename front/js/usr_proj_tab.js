@@ -1,4 +1,5 @@
 document.getElementById("create_proj_btn").addEventListener("click", create_proj);
+// document.getElementById("col_btn").addEventListener("click", create_col_function);
 
 var pages_resources;
 var pages_projects;
@@ -6,6 +7,69 @@ var list_resources;
 var list_projects;
 var curr_proj_page;
 var curr_rsrc_page;
+
+var proj_id;
+
+function create_col_function()
+{
+  event.preventDefault();
+  var id = Number(this.id.split('_')[2]);
+  var proj_id = document.getElementById("proj_tbl").rows[id].cells[1].textContent;
+  
+  var form_div_col = "<form><div class=\"form-group\">" +
+  "<input class=\"form-control\" type=\"text\" id=\"collection_title\"/><br>" +
+  "<button class=\"btn btn-primary\" id=\"submit_col_btn\">Create</button>&nbsp;" +
+  "</div></form>";
+  document.getElementById("modal_h").style.color = "green";
+  document.getElementById("modal_h").innerHTML = "New Collection";
+  document.getElementById("modal_p").innerHTML = form_div_col;
+  document.getElementById("submit_col_btn").addEventListener("click", function() {
+    post_col(proj_id);
+  });
+  
+  $("#message_modal").modal();
+}
+
+function post_col(proj_id)
+{
+  event.preventDefault();
+  
+  var collection_name = document.getElementById("collection_title").value;
+  
+  if(collection_name === "")
+  {
+    var error_data = "Collection Name cannot be empty";
+		document.getElementById("modal_p").innerHTML = error_data;
+		$("#message_modal").modal();
+		return;
+  }
+  
+  var xhr = new XMLHttpRequest();
+  var url = localStorage["rams_server"] + "api/collections";
+	var params = JSON.stringify({title:collection_name, project_id:proj_id});
+	xhr.open("POST", url, true);
+
+	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+  xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+		  console.log(this.responseText);
+		}
+	}
+	
+	xhr.send(params);
+}
+
+function cancel_function()
+{
+  event.preventDefault();
+  
+  document.getElementById("row_btn").innerHTML = "<button class=\"btn btn-primary\" id=\"col_btn\">Create Collection</button>";
+  document.getElementById("col_btn").addEventListener("click", create_col_function);
+}
 
 $(document).ready(function() {
   var data = "username=" + localStorage["Rams_usr_name"];
@@ -39,7 +103,7 @@ $(document).ready(function() {
           var ptitle = document.createElement("td");
           var ppriv = document.createElement("td");
           
-          ptitle.innerHTML = proj["title"] + " <button class=\"btn btn-primary pull-right\" id=\"proj_" + i + "\">Show resources</button>";
+          ptitle.innerHTML = proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>";
           pid.innerHTML = proj["id"];
           ppriv.innerHTML = (proj["is_private"] == 0 ? "false" : "true");
           
@@ -50,6 +114,7 @@ $(document).ready(function() {
           proj_tbl.appendChild(prow);
           
           document.getElementById("proj_" + i).addEventListener("click", show_resources);
+          document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
         }
         list_projects = projects;
         pagination_proj();
@@ -96,7 +161,9 @@ function page_proj_content()
   for(i = 0; i < end; i++)
   {
     var proj = list_projects[start + i];
-    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>"
+    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>" + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>";
+    
+    document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
   }
 }
 
