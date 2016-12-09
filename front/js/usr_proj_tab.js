@@ -1,4 +1,75 @@
 document.getElementById("create_proj_btn").addEventListener("click", create_proj);
+// document.getElementById("col_btn").addEventListener("click", create_col_function);
+
+var pages_resources;
+var pages_projects;
+var list_resources;
+var list_projects;
+var curr_proj_page;
+var curr_rsrc_page;
+
+var proj_id;
+
+function create_col_function()
+{
+  event.preventDefault();
+  var id = Number(this.id.split('_')[2]);
+  var proj_id = document.getElementById("proj_tbl").rows[id].cells[1].textContent;
+  
+  var form_div_col = "<form><div class=\"form-group\">" +
+  "<input class=\"form-control\" type=\"text\" id=\"collection_title\"/><br>" +
+  "<button class=\"btn btn-primary\" id=\"submit_col_btn\">Create</button>&nbsp;" +
+  "</div></form>";
+  document.getElementById("modal_h").style.color = "green";
+  document.getElementById("modal_h").innerHTML = "New Collection";
+  document.getElementById("modal_p").innerHTML = form_div_col;
+  document.getElementById("submit_col_btn").addEventListener("click", function() {
+    post_col(proj_id);
+  });
+  
+  $("#message_modal").modal();
+}
+
+function post_col(proj_id)
+{
+  event.preventDefault();
+  
+  var collection_name = document.getElementById("collection_title").value;
+  
+  if(collection_name === "")
+  {
+    var error_data = "Collection Name cannot be empty";
+		document.getElementById("modal_p").innerHTML = error_data;
+		$("#message_modal").modal();
+		return;
+  }
+  
+  var xhr = new XMLHttpRequest();
+  var url = localStorage["rams_server"] + "api/collections";
+	var params = JSON.stringify({title:collection_name, project_id:proj_id});
+	xhr.open("POST", url, true);
+
+	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+  xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+		  console.log(this.responseText);
+		}
+	}
+	
+	xhr.send(params);
+}
+
+function cancel_function()
+{
+  event.preventDefault();
+  
+  document.getElementById("row_btn").innerHTML = "<button class=\"btn btn-primary\" id=\"col_btn\">Create Collection</button>";
+  document.getElementById("col_btn").addEventListener("click", create_col_function);
+}
 
 $(document).ready(function() {
   var data = "username=" + localStorage["Rams_usr_name"];
@@ -17,7 +88,36 @@ $(document).ready(function() {
       var json_data = JSON.parse(xhr.responseText);
       if(json_data.success == true)
       {
-        
+        var proj_tbl = document.getElementById("proj_tbl");
+        var projects = json_data["projects"];
+        var i = 0;
+        if(projects.length <= 10)
+          pages_projects = 1;
+        else
+          pages_projects = (projects.length/10);
+        for(i = 0; i < 10; i++)
+        {
+          var proj = projects[i];
+          var prow = document.createElement("tr");
+          var pid = document.createElement("td");
+          var ptitle = document.createElement("td");
+          var ppriv = document.createElement("td");
+          
+          ptitle.innerHTML = proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>";
+          pid.innerHTML = proj["id"];
+          ppriv.innerHTML = (proj["is_private"] == 0 ? "false" : "true");
+          
+          prow.appendChild(ptitle);
+          prow.appendChild(pid);
+          prow.appendChild(ppriv);
+          
+          proj_tbl.appendChild(prow);
+          
+          document.getElementById("proj_" + i).addEventListener("click", show_resources);
+          document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
+        }
+        list_projects = projects;
+        pagination_proj();
       }
       else
       {
@@ -28,6 +128,88 @@ $(document).ready(function() {
   
   xhr.send(null);
 });
+
+function pagination_proj()
+{
+  var ul_proj = document.createElement("ul");
+  ul_proj.className = "pagination";
+  var i = 0;
+  for(i = 0; i < pages_projects; i++)
+    ul_proj.innerHTML += "<li><a href=\"#\" id=\"page_proj_" + (i + 1) + "\">" + (i + 1) + "</li>";
+  
+  var center_div = document.createElement("center");
+  center_div.innerHTML = "<div class=\"container-fluid\" id=\"pages_div\"></div>";
+  var row_tbl = document.getElementById("row_tbl_proj");
+  row_tbl.appendChild(center_div);
+  document.getElementById("pages_div").appendChild(ul_proj);
+  
+  for(i = 0; i < pages_projects; i++)
+    document.getElementById("page_proj_" + (i + 1)).addEventListener("click", page_proj_content);
+}
+
+function page_proj_content()
+{
+  var page_num = Number(this.id.split('_')[2]);
+  var start = (page_num - 1) * 10;
+  if(list_projects <= (start + 10))
+    end = list_projects.length - (start);
+  else
+    end = 10;
+  var i = 0;
+  var proj_tbl = document.getElementById("proj_tbl");
+  proj_tbl.innerHTML = "";
+  for(i = 0; i < end; i++)
+  {
+    var proj = list_projects[start + i];
+    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>" + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>";
+    
+    document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
+  }
+}
+
+function show_resources()
+{
+  event.preventDefault();
+  
+  var id = this.id.split('_')[1];
+  var proj_tbl = document.getElementById("proj_tbl");
+  var proj_id = proj_tbl.rows[id].cells[1].textContent;
+  
+  var xhr = new XMLHttpRequest();
+	var url = localStorage["rams_server"] + "api/projects/" + proj_id + "/collections";
+	xhr.open("GET", url);
+
+	xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4)
+		{
+		  var json_data = JSON.parse(this.responseText);
+		  var tbl_h = document.getElementById("proj_row_1");
+		  tbl_h.innerHTML = "";
+		  tbl_h.innerHTML = "<th>Name</th><th>ID</th><th>Link</th><th>Description</th><th>Tags</th>";
+		  var proj_tbl = document.getElementById("proj_tbl");
+		  proj_tbl.innerHTML = "";
+		  
+		  list_resources = json_data["collections"];
+		  if(list_resources.length <= 25)
+		    pages_resources = 1;
+		  else
+		    pages_resources = (list_resources.length/25) + 1
+		  var i = 0;
+		  for(i = 0; i < 25; i++)
+		  {
+		    var rsrc = list_resources[i];
+		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "<button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\"></buttom></td><td>" + rsrc["id"] + "</td><td>" + rsrc["link"]+ "</td><td>None</td><td>None</td></tr>";
+		  }
+		  curr_rsrc_page = 1;
+		  
+		}
+	}
+	
+	xhr.send(null);
+}
 
 function create_proj()
 {
@@ -84,7 +266,7 @@ function submit_proj(event)
 {
   event.preventDefault();
   
-  var is_proj_priv = document.getElementById("priv_proj").checked;
+  var is_proj_priv = (document.getElementById("priv_proj").checked === true) ? 1 : 0;
   var usr_new_proj = document.getElementById("usr_new_proj").value;
   
   if(usr_new_proj == "")
@@ -105,10 +287,10 @@ function submit_proj(event)
     if(xhr.readyState == 4 && xhr.status == 200)
     {
       var json_data = JSON.parse(xhr.responseText);
-      console.log(json_data);
+      alert(json_data["success"]);
       if(json_data["success"] == true)
       {
-        
+        location.reload(true);
       }
     }
   };
