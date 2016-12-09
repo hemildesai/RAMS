@@ -47,6 +47,12 @@ $(document).ready(function()
 						var lnk_txt = document.createTextNode(rsrc["link"]);
 						rsrc_a.appendChild(lnk_txt);
 						rsrc_a.href = rsrc["link"];
+						rsrc_a.class = "tiptext";
+						
+						var ifr = document.createElement("iframe");
+						ifr.className = "description";
+						ifr.src = rsrc["link"];
+						rsrc_a.appendChild(ifr);
 
 						var link_txt = document.createTextNode(rsrc["link"]);
 						var id_txt = document.createTextNode(rsrc["id"]);
@@ -388,3 +394,9 @@ function create_pages(pages)
   center_div.appendChild(div_ul);
   return center_div;
 }
+
+$(".tiptext").mouseover(function() {
+    $(this).children(".description").show();
+}).mouseout(function() {
+    $(this).children(".description").hide();
+});
