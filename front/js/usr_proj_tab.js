@@ -204,12 +204,12 @@ function show_collections()
 		  console.log(list_collections);
 		  if(list_collections.length <= 25)
 		  {
-		    page_collections = 1;
+		    pages_collections = 1;
 		    end = list_collections.length;
 		  }
 		  else
 		  {
-		    page_collections = (list_collections.length/25) + 1;
+		    pages_collections = (list_collections.length/25) + 1;
 		    end = 25;
 		  }
 		    
@@ -222,10 +222,51 @@ function show_collections()
 		  
 		  for(i = 0; i < end; i++)
 		    document.getElementById("col_btn_" + i).addEventListener("click", show_resources);
+		    
+		  pagination_collections();
 		}
 	}
 	
 	xhr.send(null);
+}
+
+function pagination_collections()
+{
+  var ul_proj = document.createElement("ul");
+  ul_proj.className = "pagination";
+  var i = 0;
+  for(i = 0; i < pages_collections; i++)
+    ul_proj.innerHTML += "<li><a href=\"#\" id=\"page_col_" + (i + 1) + "\">" + (i + 1) + "</li>";
+  
+  var center_div = document.createElement("center");
+  center_div.innerHTML = "<div class=\"container-fluid\" id=\"pages_div\"></div>";
+  var row_tbl = document.getElementById("row_tbl_proj");
+  row_tbl.appendChild(center_div);
+  document.getElementById("pages_div").innerHTML = "";
+  document.getElementById("pages_div").appendChild(ul_proj);
+  
+  for(i = 0; i < pages_collections; i++)
+    document.getElementById("page_col_" + (i + 1)).addEventListener("click", page_col_content);
+}
+
+function page_col_content()
+{
+  var page_num = Number(this.id.split('_')[2]);
+  var start = (page_num - 1) * 25;
+  if(list_projects <= (start + 25))
+    end = list_projects.length - (start);
+  else
+    end = 25;
+  var i = 0;
+  var proj_tbl = document.getElementById("proj_tbl");
+  proj_tbl.innerHTML = "";
+  for(i = 0; i < end; i++)
+  {
+    var proj = list_collections[start + i];
+    proj_tbl.innerHTML += "<tr><td>" + col["title"] + "<button class=\"btn btn-primary pull-right\" id=\"col_btn_" + i + "\">Show Resources</button></td><td>" + col["id"] + "</td>";
+    
+    document.getElementById("col_btn_" + i).addEventListener("click", show_resources);
+  }
 }
 
 function show_resources()
