@@ -135,7 +135,11 @@ export function getPrivateCollections(req, res) {
 
 export function removeResourceFromCollection(req, res) {
   Collection
-    .where({id: req.params.id, user_id: req.user.id})
+    .query(qb  => {
+      qb.where({id: req.params.id}).andWhere(function() {
+        this.where({is_private: false}).orWhere({user_id: req.user.id});
+      })
+    })
     .fetch({require: true, withRelated: ["resources"]})
     .then(function (collection) {
       collection.resources().detach(req.body.resource_id)
@@ -156,7 +160,11 @@ export function removeResourceFromCollection(req, res) {
 
 export function addResourceToCollection(req, res) {
   Collection
-    .where({id: req.params.id, user_id: req.user.id})
+    .query(qb  => {
+      qb.where({id: req.params.id}).andWhere(function() {
+        this.where({is_private: false}).orWhere({user_id: req.user.id});
+      })
+    })
     .fetch({require: true, withRelated: ["resources"]})
     .then(function (collection) {
       collection.resources().attach(req.body.resource_id)
