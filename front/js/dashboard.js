@@ -1,5 +1,6 @@
 document.getElementById("logout_button").addEventListener("click", logout_function);
 document.getElementById("submit_button").addEventListener("click", search_function);
+// document.getElementById("col_btn").addEventListener("click", create_col_function);
 
 var list_resources;
 var curr_page;
@@ -57,10 +58,22 @@ $(document).ready(function()
 						var del_btn_txt = document.createTextNode("Delete");
 						delete_button.appendChild(del_btn_txt);
 						delete_button.id = "del_btn_" + i;
-						delete_button.className = "btn btn-danger pull-right";
+						delete_button.className = "btn btn-danger";
+						
+						var col_button = document.createElement("button");
+						var col_btn_txt = document.createTextNode("Add to Collection");
+						col_button.appendChild(col_btn_txt);
+						col_button.id = "col_btn_" + i;
+					  col_button.className = "btn btn-primary";
+					  
+					  var div_btn = document.createElement("div");
+					  div_btn.appendChild(col_button);
+					  div_btn.appendChild(delete_button);
+					  div_btn.className = "btn-group pull-right";
+					  div_btn.role = "group";
 
 						link_td.appendChild(rsrc_a);
-						link_td.appendChild(delete_button);
+						link_td.appendChild(div_btn);
 						link_td.id = "link_td_" + i;
 						name_td.appendChild(name_txt);
 						name_td.id = "name_td_" + i;
@@ -81,6 +94,7 @@ $(document).ready(function()
 						rsrc_tbody.appendChild(rsrc_row);
 						
 						document.getElementById("del_btn_" + i).addEventListener("click", delete_function);
+						document.getElementById("col_btn_" + i).addEventListener("click", add_to_collection_function);
 					}
 					var list_pages = create_pages(pages);
 					var row_tbl = document.getElementById("row_tbl");
@@ -98,6 +112,86 @@ $(document).ready(function()
 		xhr.send(data);
 	}
 );
+
+function add_to_collection_function()
+{
+  var r_id = Number(this.id.split('_')[2]);
+  var xhr = new XMLHttpRequest();
+	var url = localStorage["rams_server"] + "api/collections";
+	// var data = "username="+localStorage["Rams_usr_name"];
+	xhr.open("GET", url);
+
+	xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+  
+  xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4)
+		{
+		  var list_html = "<div class=\"dropdown\">" +
+        "<button class=\"btn btn-primary dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">Dropdown Example" +
+        "<span class=\"caret\"></span></button>" +
+        "<ul class=\"dropdown-menu\">";
+      
+      var i = 0;
+      var collections_list = JSON.parse(this.responseText).collections;
+      for(i = 0; i < collections_list.length; i++)
+      {
+        var collection = collections_list[i];
+        list_html += "<li><a href=\"#\" id=\"col_" + i + "\">" + collection["title"] + "</a></li>";
+      }
+      
+      list_html += "</ul>";
+      list_html += "</div>";
+      
+      document.getElementById("modal_p").innerHTML = list_html;
+      
+      for(i = 0; i < collections_list.length; i++)
+        document.getElementById("col_" + i).addEventListener("click", function() {
+          post_to_col_function(r_id, this.id);
+        });
+      
+      $("#message_modal").modal();
+		}
+	}
+  
+  xhr.send();
+}
+
+function post_to_col_function(r_id, col)
+{
+  event.preventDefault();
+  var rsrc_id = Number(document.getElementById("rsrc_tbl").rows[r_id].cells[1].textContent);
+  var col_id = Number(col.split('_')[1]);
+  
+  console.log(col_id);
+  
+  var xhr = new XMLHttpRequest();
+  var url = localStorage["rams_server"] + "api/collections/" + col_id + "/add";
+	var params = JSON.stringify({resource_id:rsrc_id});
+	xhr.open("POST", url, true);
+
+  xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+	xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4 && xhr.status == 200)
+		{
+		  var json_data = JSON.parse(xhr.responseText);
+		  console.log(json_data);
+		  if(json_data.success == true)
+		  {
+		    $("message_modal").modal('hide');
+		    document.getElementById("modal_h").style.color = "green";
+		    document.getElementById("modal_h").innerHTML = "Resource Added!";
+		    document.getElementById("modal_p").innerHTML = "Resource Successlly added to Collection";
+		    $("message_modal").modal();
+		  }
+		}
+	}
+	
+	xhr.send(params);
+}
 
 function search_function() {
 	window.open("../search_client/index.html", "_self");
@@ -197,10 +291,22 @@ function page_content()
 		var del_btn_txt = document.createTextNode("Delete");
 		delete_button.appendChild(del_btn_txt);
 		delete_button.id = "del_btn_" + i;
-		delete_button.className = "btn btn-danger pull-right";
+		delete_button.className = "btn btn-danger";
+		
+		var col_button = document.createElement("button");
+		var col_btn_txt = document.createTextNode("Add to Collection");
+		col_button.appendChild(col_btn_txt);
+		col_button.id = "col_btn_" + i;
+	  col_button.className = "btn btn-primary";
+	  
+	  var div_btn = document.createElement("div");
+	  div_btn.appendChild(col_button);
+	  div_btn.appendChild(delete_button);
+	  div_btn.className = "btn-group pull-right";
+	  div_btn.role = "group";
 
 		link_td.appendChild(rsrc_a);
-		link_td.appendChild(delete_button);
+		link_td.appendChild(div_btn);
 		link_td.id = "link_td_" + i;
 		name_td.appendChild(name_txt);
 		name_td.id = "name_td_" + i;
@@ -221,6 +327,7 @@ function page_content()
 		rsrc_tbody.appendChild(rsrc_row);
 		
 		document.getElementById("del_btn_" + i).addEventListener("click", delete_function);
+		document.getElementById("col_btn_" + i).addEventListener("click", add_to_collection_function);
   }
 }
 

@@ -3,8 +3,10 @@ document.getElementById("create_proj_btn").addEventListener("click", create_proj
 
 var pages_resources;
 var pages_projects;
+var pages_collections;
 var list_resources;
 var list_projects;
+var list_collections;
 var curr_proj_page;
 var curr_rsrc_page;
 
@@ -57,6 +59,7 @@ function post_col(proj_id)
 		if(xhr.readyState == 4 && xhr.status == 200)
 		{
 		  console.log(this.responseText);
+		  $("#message_modal").modal('hide');
 		}
 	}
 	
@@ -103,7 +106,7 @@ $(document).ready(function() {
           var ptitle = document.createElement("td");
           var ppriv = document.createElement("td");
           
-          ptitle.innerHTML = proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>";
+          ptitle.innerHTML = proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show Collections</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>";
           pid.innerHTML = proj["id"];
           ppriv.innerHTML = (proj["is_private"] == 0 ? "false" : "true");
           
@@ -113,7 +116,7 @@ $(document).ready(function() {
           
           proj_tbl.appendChild(prow);
           
-          document.getElementById("proj_" + i).addEventListener("click", show_resources);
+          document.getElementById("proj_" + i).addEventListener("click", show_collections);
           document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
         }
         list_projects = projects;
@@ -161,13 +164,14 @@ function page_proj_content()
   for(i = 0; i < end; i++)
   {
     var proj = list_projects[start + i];
-    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show resources</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>" + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>";
+    proj_tbl.innerHTML += "<tr><td>" + proj["title"] + "<div class=\"btn-group pull-right\" role=\"group\"><button class=\"btn btn-primary\" id=\"proj_" + i + "\">Show Collections</button>&nbsp;<button class=\"btn btn-success\" id=\"create_col_" + i + "\">Create Collection</button></div>" + "</td><td>" + proj["id"] + "</td><td>" + (proj["is_private"] == 0 ? "false" : "true") + "</td></tr>";
     
+    document.getElementById("proj_" + i).addEventListener("click", show_collections);
     document.getElementById("create_col_" + i).addEventListener("click", create_col_function);
   }
 }
 
-function show_resources()
+function show_collections()
 {
   event.preventDefault();
   
@@ -179,7 +183,65 @@ function show_resources()
 	var url = localStorage["rams_server"] + "api/projects/" + proj_id + "/collections";
 	xhr.open("GET", url);
 
+  xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
 	xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
+
+	xhr.onreadystatechange = function()
+	{
+		if(xhr.readyState == 4)
+		{
+		  var json_data = JSON.parse(this.responseText);
+		  console.log(json_data);
+		  var tbl_h = document.getElementById("proj_row_1");
+		  tbl_h.innerHTML = "";
+		  tbl_h.innerHTML = "<th>Collection Title</th><th>ID</th>";
+		  
+		  var proj_tbl = document.getElementById("proj_tbl");
+		  proj_tbl.innerHTML = "";
+		  
+		  var end;
+		  list_collections = json_data["project"]["collections"];
+		  console.log(list_collections);
+		  if(list_collections.length <= 25)
+		  {
+		    page_collections = 1;
+		    end = list_collections.length;
+		  }
+		  else
+		  {
+		    page_collections = (list_collections.length/25) + 1;
+		    end = 25;
+		  }
+		    
+		  var i = 0;
+		  for(i = 0; i < end; i++)
+		  {
+		    var col = list_collections[i];
+		    proj_tbl.innerHTML += "<tr><td>" + col["title"] + "<button class=\"btn btn-primary pull-right\" id=\"col_btn_" + i + "\">Show Resources</button></td><td>" + col["id"] + "</td>";
+		  }
+		  
+		  for(i = 0; i < end; i++)
+		    document.getElementById("col_btn_" + i).addEventListener("click", show_resources);
+		}
+	}
+	
+	xhr.send(null);
+}
+
+function show_resources()
+{
+  event.preventDefault();
+  var id = this.id.split('_')[2];
+  var proj_tbl = document.getElementById("proj_tbl");
+  var col_id = proj_tbl.rows[id].cells[1].textContent;
+  console.log(col_id);
+  
+  var xhr = new XMLHttpRequest();
+	var url = localStorage["rams_server"] + "api/collections/" + col_id + "/resources";
+	xhr.open("GET", url);
+	
+  xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+  xhr.setRequestHeader("x-access-token", localStorage["Rams_usr_tok"]);
 
 	xhr.onreadystatechange = function()
 	{
@@ -192,16 +254,24 @@ function show_resources()
 		  var proj_tbl = document.getElementById("proj_tbl");
 		  proj_tbl.innerHTML = "";
 		  
-		  list_resources = json_data["collections"];
+		  list_resources = json_data["collection"]["resources"];
+		  console.log(list_resources);
+		  var end = 0;
 		  if(list_resources.length <= 25)
+		  {
 		    pages_resources = 1;
+		    end = list_resources.length;
+		  }
 		  else
-		    pages_resources = (list_resources.length/25) + 1
+		  {
+		    pages_resources = (list_resources.length/25) + 1;
+		    end = 25;
+		  }
 		  var i = 0;
-		  for(i = 0; i < 25; i++)
+		  for(i = 0; i < end; i++)
 		  {
 		    var rsrc = list_resources[i];
-		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "<button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\"></buttom></td><td>" + rsrc["id"] + "</td><td>" + rsrc["link"]+ "</td><td>None</td><td>None</td></tr>";
+		    proj_tbl.innerHTML += "<tr><td>" + rsrc["name"] + "</td><td>" + rsrc["id"] + "</td><td>" + rsrc["link"]+ "<button class=\"btn btn-danger pull-right\" id=\"del_btn_" + i + "\">Delete from Collection</button></td><td>None</td><td>None</td></tr>";
 		  }
 		  curr_rsrc_page = 1;
 		  
